@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>QD Framework — Output đánh giá chuẩn theo giai đoạn</title>
+  <style>
+    :root {
+      --bg: #f6f3ee;
+      --surface: #ffffff;
+      --ink: #1c2430;
+      --muted: #5a6573;
+      --line: #d9d2c5;
+      --accent: #0f6b5c;
+      --accent-soft: #e6f3f0;
+      --pass: #1b7a3d;
+      --pass-bg: #e8f6ec;
+      --fail: #a33b2b;
+      --fail-bg: #fbebe8;
+      --shadow: 0 1px 0 rgba(28, 36, 48, 0.04);
+      --radius: 10px;
+      --font: "IBM Plex Sans", "Noto Sans JP", "Segoe UI", sans-serif;
+      --mono: "IBM Plex Mono", "Consolas", monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse 80% 50% at 0% 0%, #e7efe9 0%, transparent 55%),
+        radial-gradient(ellipse 70% 40% at 100% 10%, #efe8dc 0%, transparent 50%),
+        var(--bg);
+      font-family: var(--font);
+      line-height: 1.55;
+      font-size: 15px;
+    }
+
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 32px 20px 64px;
+    }
+
+    header {
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid var(--ink);
+    }
+
+    .eyebrow {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(1.6rem, 3vw, 2rem);
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+    }
+
+    .lead {
+      margin: 0;
+      color: var(--muted);
+      max-width: 62ch;
+    }
+
+    .flow {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px 18px 14px;
+      margin: 20px 0 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .flow-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .flow-steps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .step {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid #b9d8d0;
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .arrow {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .rules {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .rule {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+    }
+
+    .rule strong {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .rule span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    section.stage {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 20px 20px 16px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .stage-head {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .stage-head h2 {
+      margin: 0;
+      font-size: 1.15rem;
+      letter-spacing: -0.01em;
+    }
+
+    .badge {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border-radius: 999px;
+      padding: 4px 10px;
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 16px;
+      margin-bottom: 14px;
+      font-size: 14px;
+    }
+
+    .meta dt {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .meta dd {
+      margin: 2px 0 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      margin: 8px 0 12px;
+    }
+
+    th, td {
+      border: 1px solid var(--line);
+      padding: 8px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f3efe7;
+      font-size: 12px;
+      letter-spacing: 0.02em;
+    }
+
+    td:first-child {
+      width: 36px;
+      text-align: center;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .judge {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .pass, .fail {
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 13px;
+    }
+
+    .pass {
+      background: var(--pass-bg);
+      border: 1px solid #b9dfc4;
+      color: #14532d;
+    }
+
+    .fail {
+      background: var(--fail-bg);
+      border: 1px solid #e5c2ba;
+      color: #7a2e22;
+    }
+
+    .pass strong, .fail strong {
+      display: block;
+      margin-bottom: 2px;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .next {
+      margin: 12px 0 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .next b { color: var(--ink); }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin: 22px 0;
+    }
+
+    .panel h2 {
+      margin: 0 0 10px;
+      font-size: 1.1rem;
+    }
+
+    ol.compact {
+      margin: 8px 0 12px;
+      padding-left: 20px;
+    }
+
+    ol.compact li { margin: 4px 0; }
+
+    .principle {
+      margin-top: 28px;
+      padding: 16px 18px;
+      border-left: 4px solid var(--accent);
+      background: var(--accent-soft);
+      border-radius: 0 10px 10px 0;
+      font-size: 15px;
+    }
+
+    footer {
+      margin-top: 28px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media (max-width: 640px) {
+      .meta, .judge { grid-template-columns: 1fr; }
+      .flow-steps { gap: 6px; }
+      .arrow { display: none; }
+      .step { width: 100%; text-align: center; border-radius: 8px; }
+    }
+
+    @media print {
+      body { background: #fff; font-size: 12px; }
+      .wrap { padding: 0; max-width: none; }
+      section.stage, .panel, .flow, .rule { break-inside: avoid; box-shadow: none; }
+      .step { border: 1px solid #999; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="eyebrow">QD Framework</div>
+      <h1>Output đánh giá chuẩn theo giai đoạn</h1>
+      <p class="lead">
+        Bản vận hành nhanh: cuối mỗi giai đoạn mở 1 Ticket Gate → check đủ output →
+        <strong>Pass mới được sang bước sau</strong>. Thiếu output hoặc còn bug High = Fail.
+      </p>
+    </header>
+
+    <div class="flow">
+      <div class="flow-title">Flow vận hành</div>
+      <div class="flow-steps">
+        <span class="step">1. 要件・計画</span><span class="arrow">→</span>
+        <span class="step">2. 設計 SPEC</span><span class="arrow">→</span>
+        <span class="step">3. デザイン</span><span class="arrow">→</span>
+        <span class="step">4. 開発</span><span class="arrow">→</span>
+        <span class="step">5. 検証</span><span class="arrow">→</span>
+        <span class="step">6. リリース</span>
+      </div>
+    </div>
+
+    <div class="rules">
+      <div class="rule"><strong>Output</strong><span>Phải có link cụ thể (file, ticket, Figma, PR, Sheet)</span></div>
+      <div class="rule"><strong>Pass</strong><span>Đủ output + điều kiện cứng của giai đoạn</span></div>
+      <div class="rule"><strong>Fail</strong><span>Thiếu output, hoặc còn Blocker/High chưa xử lý</span></div>
+      <div class="rule"><strong>Ai ký</strong><span>1 người chịu trách nhiệm giai đoạn đó</span></div>
+    </div>
+
+    <!-- 1 -->
+    <section class="stage" id="stage-1">
+      <div class="stage-head">
+        <h2>1. 要件定義・PJ計画書</h2>
+        <span class="badge">Gate → 設計</span>
+      </div>
+      <dl class="meta">
+        <div><dt>Mục tiêu</dt><dd>Chốt làm gì / không làm gì / khi nào xong</dd></div>
+        <div><dt>Người ký Gate</dt><dd>Dir / PM</dd></div>
+      </dl>
+      <table>
+        <thead><tr><th>#</th><th>Output cần có</th><th>Đủ khi nào</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>要件定義書</td><td>Có In scope / Out scope, mục tiêu, actor</td></tr>
+          <tr><td>2</td><td>PJ計画書</td><td>Có milestone + ngày + người phụ trách</td></tr>
+          <tr><td>3</td><td>Ticket / WBS trên Backlog</td><td>Đã tách task, có estimate sơ bộ</td></tr>
+          <tr><td>4</td><td>Xác nhận khách (approve)</td><td>Có ngày + người + link note/comment</td></tr>
+        </tbody>
+      </table>
+      <div class="judge">
+        <div class="pass"><strong>Pass khi</strong>Khách đã chốt yêu cầu + kế hoạch; không còn câu hỏi Blocker.</div>
+        <div class="fail"><strong>Chưa Pass nếu</strong>Scope mơ hồ (“làm thêm nếu kịp”), chưa có ngày milestone.</div>
+      </div>
+      <p class="next">→ Sang bước tiếp: <b>設計 SPEC</b></p>
+    </section>
+
+    <!-- 2 -->
+    <section class="stage" id="stage-2">
+      <div class="stage-head">
+        <h2>2. 設計（画面仕様書 SPEC / 設計書）</h2>
+        <span class="badge">Gate → デザイン / 開発</span>
+      </div>
+      <dl class="meta">
+        <div><dt>Mục tiêu</dt><dd>Viết đủ để Dev code và QC test, không phải hỏi lại</dd></div>
+        <div><dt>Người ký Gate</dt><dd>BrSE / Dir <em>(Dev + QC đã review)</em></dd></div>
+      </dl>
+      <table>
+        <thead><tr><th>#</th><th>Output cần có</th><th>Đủ khi nào</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>画面仕様書 (SPEC)</td><td>Có field, validation, lỗi, quyền, flow màn</td></tr>
+          <tr><td>2</td><td>AC (tiêu chí nghiệm thu)</td><td>Mỗi chức năng có Given–When–Then hoặc checklist rõ</td></tr>
+          <tr><td>3</td><td>Bảng trạng thái / nhánh</td><td>Các case chính (role, status, điều kiện) đã ghi</td></tr>
+          <tr><td>4</td><td>Review record</td><td>Dev + QC đã review; issue High = 0</td></tr>
+        </tbody>
+      </table>
+      <div class="judge">
+        <div class="pass"><strong>Pass khi</strong>SPEC đã khóa version; Dev/QC review xong; không còn TBD ở logic chính.</div>
+        <div class="fail"><strong>Chưa Pass nếu</strong>Chỉ mô tả UI, thiếu lỗi/validation; AC kiểu “hoạt động bình thường”.</div>
+      </div>
+      <p class="next">→ Sang bước tiếp: <b>デザイン</b> và/hoặc <b>開発</b></p>
+    </section>
+
+    <!-- 3 -->
+    <section class="stage" id="stage-3">
+      <div class="stage-head">
+        <h2>3. デザイン</h2>
+        <span class="badge">Gate → 開発</span>
+      </div>
+      <dl class="meta">
+        <div><dt>Mục tiêu</dt><dd>Figma đúng SPEC, đủ trạng thái để Dev làm</dd></div>
+        <div><dt>Người ký Gate</dt><dd>Designer <em>(Dir + Dev approve)</em></dd></div>
+      </dl>
+      <table>
+        <thead><tr><th>#</th><th>Output cần có</th><th>Đủ khi nào</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Figma Final</td><td>Đủ màn trong scope, đánh dấu Final/Approved</td></tr>
+          <tr><td>2</td><td>Các state cần thiết</td><td>Ít nhất: bình thường + Error + Empty</td></tr>
+          <tr><td>3</td><td>Handoff</td><td>Link frame ↔ SPEC; copy/text chính thức</td></tr>
+          <tr><td>4</td><td>Approve</td><td>Dir xác nhận đúng nghiệp vụ; Dev xác nhận làm được</td></tr>
+        </tbody>
+      </table>
+      <div class="judge">
+        <div class="pass"><strong>Pass khi</strong>Design khớp SPEC; không còn placeholder; Dev không còn hỏi thiếu state/copy.</div>
+        <div class="fail"><strong>Chưa Pass nếu</strong>Chỉ có happy path; lệch SPEC chưa có Change Request.</div>
+      </div>
+      <p class="next">→ Sang bước tiếp: <b>開発</b></p>
+    </section>
+
+    <!-- 4 -->
+    <section class="stage" id="stage-4">
+      <div class="stage-head">
+        <h2>4. 開発</h2>
+        <span class="badge">Gate → 検証</span>
+      </div>
+      <dl class="meta">
+        <div><dt>Mục tiêu</dt><dd>Code đúng SPEC/Design, bàn giao test được</dd></div>
+        <div><dt>Người ký Gate</dt><dd>Dev Lead / Dev chính</dd></div>
+      </dl>
+      <table>
+        <thead><tr><th>#</th><th>Output cần có</th><th>Đủ khi nào</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>PR gắn Backlog ticket</td><td>1 PR = rõ đang làm ticket nào</td></tr>
+          <tr><td>2</td><td>Code review approve</td><td>≥ 1 người khác approve; High comment = 0</td></tr>
+          <tr><td>3</td><td>影響範囲メモ</td><td>Ghi màn/API bị ảnh hưởng (hoặc “không có”)</td></tr>
+          <tr><td>4</td><td>Build trên môi trường test</td><td>Có version/commit; QC biết test ở đâu</td></tr>
+        </tbody>
+      </table>
+      <div class="judge">
+        <div class="pass"><strong>Pass khi (Ready for QA)</strong>AC chính Dev đã tự check; PR merged/deploy test; không bug High do chính thay đổi này.</div>
+        <div class="fail"><strong>Chưa Pass nếu</strong>Merge không review; “xong” nhưng QC không biết build nào.</div>
+      </div>
+      <p class="next">→ Sang bước tiếp: <b>検証</b></p>
+    </section>
+
+    <!-- 5 -->
+    <section class="stage" id="stage-5">
+      <div class="stage-head">
+        <h2>5. 検証</h2>
+        <span class="badge">Gate → リリース</span>
+      </div>
+      <dl class="meta">
+        <div><dt>Mục tiêu</dt><dd>Có số liệu chứng minh đủ điều kiện release / UAT</dd></div>
+        <div><dt>Người ký Gate</dt><dd>QC</dd></div>
+      </dl>
+      <table>
+        <thead><tr><th>#</th><th>Output cần có</th><th>Đủ khi nào</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>テスト計画</td><td>Phạm vi test, lịch, môi trường, tiêu chí Pass</td></tr>
+          <tr><td>2</td><td>テスト仕様書</td><td>Case map theo AC + regression ảnh hưởng</td></tr>
+          <tr><td>3</td><td>Kết quả chạy test</td><td>% đã chạy, Pass/Fail, gắn version build</td></tr>
+          <tr><td>4</td><td>Bug tickets</td><td>Có severity, bước tái hiện, expected/actual</td></tr>
+          <tr><td>5</td><td>品質サマリー</td><td>Số bug theo mức; kết luận <strong>Go</strong> hoặc <strong>No-Go</strong></td></tr>
+        </tbody>
+      </table>
+      <div class="judge">
+        <div class="pass"><strong>Pass khi</strong>Critical/Blocker = 0; High = 0 (muốn để lại phải có waiver + duyệt); 100% case In-scope đã chạy.</div>
+        <div class="fail"><strong>Chưa Pass nếu</strong>“Test xong” không có số; chỉ test happy path.</div>
+      </div>
+      <p class="next">→ Sang bước tiếp: <b>リリース</b> (khi Go)</p>
+    </section>
+
+    <!-- 6 -->
+    <section class="stage" id="stage-6">
+      <div class="stage-head">
+        <h2>6. リリース</h2>
+        <span class="badge">Đóng release</span>
+      </div>
+      <dl class="meta">
+        <div><dt>Mục tiêu</dt><dd>Lên production an toàn, có rollback, có xác nhận sau release</dd></div>
+        <div><dt>Người ký Gate</dt><dd>Dir / Release owner</dd></div>
+      </dl>
+      <table>
+        <thead><tr><th>#</th><th>Output cần có</th><th>Đủ khi nào</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Go / No-Go</td><td>Có người duyệt + thời điểm + version</td></tr>
+          <tr><td>2</td><td>リリース手順書</td><td>Từng bước deploy + ai làm</td></tr>
+          <tr><td>3</td><td>Rollback計画</td><td>Khi nào rollback, làm thế nào</td></tr>
+          <tr><td>4</td><td>Smoke test production</td><td>Case tối thiểu sau deploy = Pass</td></tr>
+          <tr><td>5</td><td>Báo cáo hoàn tất</td><td>Giờ xong, version thực tế, gửi Slack/stakeholder</td></tr>
+        </tbody>
+      </table>
+      <div class="judge">
+        <div class="pass"><strong>Pass khi</strong>Đã Go trước khi deploy; smoke Pass; có báo cáo đóng release.</div>
+        <div class="fail"><strong>Chưa Pass nếu</strong>Deploy không có rollback; không smoke sau lên prod.</div>
+      </div>
+      <p class="next">→ Đóng release / theo dõi 24–72h</p>
+    </section>
+
+    <section class="panel" id="ticket-gate">
+      <h2>Ticket Gate dùng thế nào? (1 phút)</h2>
+      <p>Mỗi cuối giai đoạn = <strong>1 ticket</strong> tên ví dụ: <code>Gate: 検証</code>.</p>
+      <ol class="compact">
+        <li>Dán link các output ở bảng trên</li>
+        <li>Tick đủ / thiếu</li>
+        <li>Người ký ghi: <code>Pass</code> hoặc <code>Fail</code> + ngày</li>
+      </ol>
+      <p><strong>Pass</strong> → chuyển giai đoạn tiếp.&nbsp;&nbsp;<strong>Fail</strong> → ghi mục thiếu, làm nốt, đánh giá lại trên cùng ticket Gate.</p>
+    </section>
+
+    <section class="panel" id="quick-ref">
+      <h2>Bảng tra nhanh</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Giai đoạn</th>
+            <th>Output tối thiểu</th>
+            <th>Người ký</th>
+            <th>Điều kiện cứng</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>要件・計画</td><td>要件 + 計画 + ticket + approve khách</td><td>Dir</td><td>Hỏi Blocker = 0</td></tr>
+          <tr><td>設計 SPEC</td><td>SPEC + AC + review Dev/QC</td><td>BrSE/Dir</td><td>Khóa version; High = 0</td></tr>
+          <tr><td>デザイン</td><td>Figma Final + Error/Empty + approve</td><td>Designer</td><td>Khớp SPEC</td></tr>
+          <tr><td>開発</td><td>PR + review + 影響範囲 + build test</td><td>Dev</td><td>Ready for QA thật</td></tr>
+          <tr><td>検証</td><td>Kế hoạch + case + kết quả + Go/No-Go</td><td>QC</td><td>Critical/High = 0</td></tr>
+          <tr><td>リリース</td><td>Go + 手順 + Rollback + smoke + báo cáo</td><td>Dir</td><td>Smoke Pass</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="panel" id="words">
+      <h2>Từ không dùng khi đánh giá</h2>
+      <table>
+        <thead><tr><th>Tránh nói</th><th>Nói thay</th></tr></thead>
+        <tbody>
+          <tr><td>“Ổn / cơ bản xong”</td><td>“Đủ output 1–4; thiếu mục …”</td></tr>
+          <tr><td>“Chất lượng tốt”</td><td>“Pass rate X%; High open = N”</td></tr>
+          <tr><td>“Đã trao đổi rồi”</td><td>“Link note/approve ngày …”</td></tr>
+          <tr><td>“Để sau”</td><td>“Out of scope” hoặc “CR #ticket”</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <div class="principle">
+      <strong>Nguyên tắc 1 câu:</strong>
+      Mỗi giai đoạn chỉ trả lời 3 ý — <em>Output đâu? Ai ký Pass? Được sang bước tiếp chưa?</em>
+    </div>
+
+    <footer>
+      QD Framework · Output chuẩn theo giai đoạn · Mở file HTML này trên trình duyệt để xem / in
+    </footer>
+  </div>
+</body>
+</html>
