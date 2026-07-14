@@ -3,12 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>QD Framework — Bộ output 2 lớp (QD / Reviewer)</title>
+  <title>QD Framework — Output đánh giá cho QD</title>
   <style>
     :root {
       --bg: #f6f3ee; --surface: #fff; --ink: #1c2430; --muted: #5a6573;
       --line: #d9d2c5; --accent: #0f6b5c; --accent-soft: #e6f3f0;
-      --a: #0b4f8a; --a-bg: #e8f1f8; --b: #6b3fa0; --b-bg: #f3eaf8;
       --ok: #14532d; --ok-bg: #e8f6ec; --ng: #7a2e22; --ng-bg: #fbebe8;
       --warn: #7a5b14; --warn-bg: #fff6e0;
       --font: "IBM Plex Sans", "Noto Sans JP", "Segoe UI", sans-serif;
@@ -19,11 +18,11 @@
       background: radial-gradient(ellipse 80% 50% at 0% 0%, #e7efe9 0%, transparent 55%),
                   radial-gradient(ellipse 70% 40% at 100% 10%, #efe8dc 0%, transparent 50%), var(--bg);
     }
-    .wrap { max-width: 980px; margin: 0 auto; padding: 32px 20px 64px; }
+    .wrap { max-width: 920px; margin: 0 auto; padding: 32px 20px 64px; }
     header { margin-bottom: 18px; padding-bottom: 14px; border-bottom: 2px solid var(--ink); }
     .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
-    h1 { margin: 8px 0 10px; font-size: clamp(1.35rem, 3vw, 1.8rem); line-height: 1.25; }
-    .lead { margin: 0; color: var(--muted); max-width: 72ch; }
+    h1 { margin: 8px 0 10px; font-size: clamp(1.35rem, 3vw, 1.75rem); line-height: 1.25; }
+    .lead { margin: 0; color: var(--muted); max-width: 68ch; }
     h2 { font-size: 1.15rem; margin: 24px 0 10px; }
     h3 { margin: 0 0 8px; font-size: 1.05rem; }
     .card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; margin: 12px 0; }
@@ -31,11 +30,11 @@
     table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 8px 0; }
     th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
     th { background: #f3efe7; font-size: 12px; }
-    .layer-a { background: var(--a-bg); color: var(--a); border: 1px solid #b7cfe3; border-radius: 8px; padding: 10px 12px; font-size: 13px; }
-    .layer-b { background: var(--b-bg); color: var(--b); border: 1px solid #d4c0e8; border-radius: 8px; padding: 10px 12px; font-size: 13px; }
+    .ok { background: var(--ok-bg); color: var(--ok); border: 1px solid #b9dfc4; border-radius: 8px; padding: 8px 10px; font-size: 13px; }
+    .ng { background: var(--ng-bg); color: var(--ng); border: 1px solid #e5c2ba; border-radius: 8px; padding: 8px 10px; font-size: 13px; }
     .note { background: var(--warn-bg); color: var(--warn); border: 1px solid #ecd89a; border-radius: 8px; padding: 10px 12px; font-size: 13px; margin: 8px 0; }
-    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .tag { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); margin-bottom: 6px; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
     .principle { margin-top: 20px; padding: 14px 16px; border-left: 4px solid var(--accent); background: var(--accent-soft); border-radius: 0 10px 10px 0; }
     footer { margin-top: 22px; color: var(--muted); font-size: 12px; }
     @media (max-width: 640px) { .grid2 { grid-template-columns: 1fr; } }
@@ -45,108 +44,121 @@
   <div class="wrap">
     <header>
       <div class="eyebrow">QD Framework</div>
-      <h1>Bộ output chuẩn 2 lớp — QD / Reviewer</h1>
+      <h1>Output đánh giá cho QD — từng giai đoạn</h1>
       <p class="lead">
-        Muốn cụ thể nhưng không biến QD thành reviewer:
-        tách <strong>Lớp A (chuẩn cổng — QD)</strong> và <strong>Lớp B (chuẩn nội dung — Reviewer)</strong>.
+        QD và Reviewer tách rời. Tài liệu này <strong>chỉ dành cho QD</strong>:
+        check có link / đúng người approve / 指摘 trong ngưỡng → ĐỦ hoặc CHƯA ĐỦ.
       </p>
     </header>
 
     <section class="card">
-      <h2 style="margin-top:0">Vì sao phải 2 lớp?</h2>
-      <div class="grid2">
-        <div class="layer-a"><strong>Lớp A — QD</strong><br>Nông, đếm được, nhìn link/số là biết.<br>Hỏi: Có đủ chưa? Ai approve? 指摘 vượt chưa?</div>
-        <div class="layer-b"><strong>Lớp B — Reviewer</strong><br>Sâu, soi nội dung chuyên môn.<br>Hỏi: Đúng/đủ/dùng được chưa? → ghi 指摘</div>
-      </div>
-      <div class="flow" style="margin-top:12px">担当 tạo output
-      │
-      ▼
-Reviewer → LỚP B (review nội dung, 指摘, approve)
-      │
-      ▼
-QD → LỚP A (ĐỦ / CHƯA ĐỦ → xếp A–D)
-      │
-      └─ QD kiêm reviewer → dùng A + B</div>
-    </section>
-
-    <section class="card">
-      <h2 style="margin-top:0">Quy tắc tách nhanh</h2>
+      <h2 style="margin-top:0">Cách QD đánh giá</h2>
+      <div class="flow">Mở checklist giai đoạn
+  ├─ Thiếu mục / High>0 → CHƯA ĐỦ → trả 担当
+  └─ Đủ hết → ĐỦ → cho sang bước sau</div>
       <table>
-        <thead><tr><th>Câu hỏi</th><th>Lớp</th></tr></thead>
+        <thead><tr><th>Nhóm</th><th>Câu hỏi</th><th>Cách trả lời</th></tr></thead>
         <tbody>
-          <tr><td>Có / không có artifact? Ai đã ký?</td><td><strong>A — QD</strong></td></tr>
-          <tr><td>Số 指摘, % test, version?</td><td><strong>A — QD</strong></td></tr>
-          <tr><td>Nội dung đúng chưa? đủ nhánh chưa?</td><td><strong>B — Reviewer</strong></td></tr>
-          <tr><td>Logic / UI / code / case chi tiết?</td><td><strong>B — Reviewer</strong></td></tr>
+          <tr><td>Artifact</td><td>Output bắt buộc có chưa?</td><td>Phải có <strong>link</strong></td></tr>
+          <tr><td>Xác nhận</td><td>Đúng người approve chưa?</td><td>Tên + ngày + link</td></tr>
+          <tr><td>Ngưỡng</td><td>Critical/High còn mở?</td><td><strong>= 0</strong></td></tr>
         </tbody>
       </table>
-      <div class="note">Vòng 1 QD chỉ cầm Lớp A (+ số 指摘/approve từ Lớp B). Công thức điểm Vòng 2: 未確定.</div>
+      <div class="note">Chấm điểm A–D / công thức: chưa chốt. Trước mắt QD chỉ kết luận <strong>ĐỦ / CHƯA ĐỦ</strong>.</div>
     </section>
 
-    <h2>Từng giai đoạn — A + B</h2>
+    <h2>Checklist QD từng giai đoạn</h2>
 
     <section class="card">
-      <div class="tag">1 · 要件・計画 · 担当 Dir/PM</div>
+      <div class="tag">1 · CHƯA ĐỦ → Dir/PM</div>
       <h3>要件定義・PJ計画書</h3>
-      <div class="grid2">
-        <div class="layer-a"><strong>A — QD</strong><br>要件定義書 · PJ計画書 · WBS · Approve khách · High=0</div>
-        <div class="layer-b"><strong>B — Reviewer</strong><br>In/Out rõ · Actor/mục tiêu · Open Q đã xử lý · Milestone khả thi · Risk</div>
-      </div>
-    </section>
-
-    <section class="card">
-      <div class="tag">2 · 設計 SPEC · Reviewer: Dev+QC</div>
-      <h3>設計（SPEC / 設計書）</h3>
-      <div class="grid2">
-        <div class="layer-a"><strong>A — QD</strong><br>SPEC · AC · Bảng nhánh · Record review Dev+QC · Version · High=0</div>
-        <div class="layer-b"><strong>B — Reviewer</strong><br>Field/validation/lỗi/quyền · Flow · Nhánh · AC testable · Không TBD logic chính</div>
-      </div>
-    </section>
-
-    <section class="card">
-      <div class="tag">3 · デザイン · Reviewer: Dir+Dev</div>
-      <h3>デザイン</h3>
-      <div class="grid2">
-        <div class="layer-a"><strong>A — QD</strong><br>Figma Final · Error+Empty · Handoff↔SPEC · Approve Dir+Dev · High=0</div>
-        <div class="layer-b"><strong>B — Reviewer</strong><br>Khớp SPEC · Đủ state · Nhất quán · Responsive theo scope · Dev làm được</div>
-      </div>
-    </section>
-
-    <section class="card">
-      <div class="tag">4 · 開発 · Reviewer: Dev khác (PR)</div>
-      <h3>開発</h3>
-      <div class="grid2">
-        <div class="layer-a"><strong>A — QD</strong><br>PR gắn ticket · ≥1 approve · 影響範囲 · Build/version · High=0 → Ready for QA</div>
-        <div class="layer-b"><strong>B — Reviewer</strong><br>Đúng SPEC · Edge case · Ảnh hưởng · Không WIP · Self-check AC</div>
-      </div>
-    </section>
-
-    <section class="card">
-      <div class="tag">5 · 検証 · QD audit số liệu</div>
-      <h3>検証</h3>
-      <div class="grid2">
-        <div class="layer-a"><strong>A — QD</strong><br>Kế hoạch · 仕様書 · Kết quả+% · Bug · Go/No-Go · 100% chạy · High=0</div>
-        <div class="layer-b"><strong>B — Reviewer/QC</strong><br>Cover AC · Regression · Case biên · Bug rõ · Kết luận khớp số</div>
-      </div>
-    </section>
-
-    <section class="card">
-      <div class="tag">6 · リリース · Thiếu Go/手順/Rollback → không deploy</div>
-      <h3>リリース</h3>
-      <div class="grid2">
-        <div class="layer-a"><strong>A — QD</strong><br>Go · 手順 · Rollback · Smoke Pass · Báo cáo · High=0</div>
-        <div class="layer-b"><strong>B — Reviewer/Dev+QC</strong><br>Deploy đúng · Rollback khả thi · Smoke đúng luồng · Monitoring · Known issues</div>
-      </div>
-    </section>
-
-    <section class="card">
-      <h2 style="margin-top:0">Khi QD kiêm reviewer</h2>
       <table>
-        <thead><tr><th>Tình huống</th><th>Dùng</th></tr></thead>
+        <thead><tr><th>#</th><th>Output QD cần thấy</th><th>ĐỦ khi</th></tr></thead>
         <tbody>
-          <tr><td>QD chỉ đánh giá đạt chuẩn</td><td>Chỉ <strong>Lớp A</strong></td></tr>
-          <tr><td>QD kiêm reviewer</td><td><strong>A + B</strong> (ghi tách cổng / nội dung)</td></tr>
-          <tr><td>Rủi ro cao / bằng chứng yếu</td><td>A + spot-check 1–3 mục B</td></tr>
+          <tr><td>1</td><td>要件定義書</td><td>Có link</td></tr>
+          <tr><td>2</td><td>PJ計画書</td><td>Có link; có milestone + ngày</td></tr>
+          <tr><td>3</td><td>Ticket / WBS</td><td>Có trên Backlog</td></tr>
+          <tr><td>4</td><td>Approve khách</td><td>Ngày + tên + link</td></tr>
+          <tr><td>5</td><td>Critical/High còn mở</td><td>= 0</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <div class="tag">2 · CHƯA ĐỦ → BrSE/Dir</div>
+      <h3>設計（SPEC / 設計書）</h3>
+      <table>
+        <thead><tr><th>#</th><th>Output QD cần thấy</th><th>ĐỦ khi</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>SPEC</td><td>Có link</td></tr>
+          <tr><td>2</td><td>AC</td><td>Có link</td></tr>
+          <tr><td>3</td><td>Bảng nhánh / trạng thái</td><td>Có link hoặc mục trong SPEC</td></tr>
+          <tr><td>4</td><td>Review Dev và QC</td><td>Approve/comment của cả hai</td></tr>
+          <tr><td>5</td><td>Version / ngày khóa</td><td>Có ghi</td></tr>
+          <tr><td>6</td><td>Critical/High còn mở</td><td>= 0</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <div class="tag">3 · CHƯA ĐỦ → Designer</div>
+      <h3>デザイン</h3>
+      <table>
+        <thead><tr><th>#</th><th>Output QD cần thấy</th><th>ĐỦ khi</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Figma Final/Approved</td><td>Có link + dấu Final/Approved</td></tr>
+          <tr><td>2</td><td>State Error và Empty</td><td>Có frame — hoặc N/A + lý do</td></tr>
+          <tr><td>3</td><td>Handoff ↔ SPEC</td><td>Có mapping</td></tr>
+          <tr><td>4</td><td>Approve Dir và Dev</td><td>Cả hai đã xác nhận</td></tr>
+          <tr><td>5</td><td>Critical/High còn mở</td><td>= 0</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <div class="tag">4 · CHƯA ĐỦ → Dev · ĐỦ = Ready for QA</div>
+      <h3>開発</h3>
+      <table>
+        <thead><tr><th>#</th><th>Output QD cần thấy</th><th>ĐỦ khi</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>PR gắn ticket</td><td>PR ghi rõ ticket</td></tr>
+          <tr><td>2</td><td>Code review approve</td><td>≥ 1 approve từ người khác</td></tr>
+          <tr><td>3</td><td>影響範囲メモ</td><td>Có ghi (kể cả “không có”)</td></tr>
+          <tr><td>4</td><td>Build env test</td><td>Có version/commit</td></tr>
+          <tr><td>5</td><td>Critical/High còn mở</td><td>= 0</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <div class="tag">5 · CHƯA ĐỦ → QC / Dev</div>
+      <h3>検証</h3>
+      <table>
+        <thead><tr><th>#</th><th>Output QD cần thấy</th><th>ĐỦ khi</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>テスト計画</td><td>Có link</td></tr>
+          <tr><td>2</td><td>テスト仕様書</td><td>Có link</td></tr>
+          <tr><td>3</td><td>Kết quả chạy test</td><td>% + Pass/Fail + version</td></tr>
+          <tr><td>4</td><td>Bug tickets</td><td>Đếm được theo severity</td></tr>
+          <tr><td>5</td><td>品質サマリー</td><td>Go hoặc No-Go</td></tr>
+          <tr><td>6</td><td>% case In-scope đã chạy</td><td>= 100%</td></tr>
+          <tr><td>7</td><td>Critical/High còn mở</td><td>= 0 (hoặc waiver)</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <div class="tag">6 · Thiếu Go/手順/Rollback → không deploy</div>
+      <h3>リリース</h3>
+      <table>
+        <thead><tr><th>#</th><th>Output QD cần thấy</th><th>ĐỦ khi</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Go / No-Go</td><td>Người duyệt + thời điểm + version</td></tr>
+          <tr><td>2</td><td>リリース手順書</td><td>Có link</td></tr>
+          <tr><td>3</td><td>Rollback計画</td><td>Có link</td></tr>
+          <tr><td>4</td><td>Smoke production</td><td>Pass</td></tr>
+          <tr><td>5</td><td>Báo cáo hoàn tất</td><td>Giờ xong + version + đã gửi</td></tr>
+          <tr><td>6</td><td>Critical/High sau release</td><td>= 0 (hoặc ETA thống nhất)</td></tr>
         </tbody>
       </table>
     </section>
@@ -154,25 +166,25 @@ QD → LỚP A (ĐỦ / CHƯA ĐỦ → xếp A–D)
     <section class="card">
       <h2 style="margin-top:0">Bảng tra nhanh</h2>
       <table>
-        <thead><tr><th>Giai đoạn</th><th>Lớp A (QD)</th><th>Lớp B (Reviewer)</th><th>CHƯA ĐỦ →</th></tr></thead>
+        <thead><tr><th>Giai đoạn</th><th>QD cần thấy</th><th>CHƯA ĐỦ →</th></tr></thead>
         <tbody>
-          <tr><td>要件・計画</td><td>要件+計画+WBS+approve+High=0</td><td>Scope, milestone, Open Q</td><td>Dir/PM</td></tr>
-          <tr><td>設計 SPEC</td><td>SPEC+AC+nhánh+review+version+High=0</td><td>Field, validation, AC testable</td><td>BrSE/Dir</td></tr>
-          <tr><td>デザイン</td><td>Figma+state+handoff+approve+High=0</td><td>Khớp SPEC, state, nhất quán</td><td>Designer</td></tr>
-          <tr><td>開発</td><td>PR+approve+影響範囲+build+High=0</td><td>Đúng SPEC, edge case</td><td>Dev</td></tr>
-          <tr><td>検証</td><td>Bộ test+Go/No-Go+100%+High=0</td><td>Cover, regression, kết luận</td><td>QC</td></tr>
-          <tr><td>リリース</td><td>Go+手順+Rollback+smoke+báo cáo</td><td>Deploy, rollback, monitoring</td><td>Dir</td></tr>
+          <tr><td>要件・計画</td><td>要件 + 計画(ngày) + WBS + approve + High=0</td><td>Dir/PM</td></tr>
+          <tr><td>設計 SPEC</td><td>SPEC + AC + nhánh + review Dev&QC + version + High=0</td><td>BrSE/Dir</td></tr>
+          <tr><td>デザイン</td><td>Figma Final + Error/Empty + handoff + approve Dir&Dev + High=0</td><td>Designer</td></tr>
+          <tr><td>開発</td><td>PR + approve + 影響範囲 + build + High=0</td><td>Dev</td></tr>
+          <tr><td>検証</td><td>Kế hoạch + 仕様書 + kết quả + bug + Go/No-Go + 100% + High=0</td><td>QC/Dev</td></tr>
+          <tr><td>リリース</td><td>Go + 手順 + Rollback + smoke + báo cáo + High=0</td><td>Dir</td></tr>
         </tbody>
       </table>
     </section>
 
     <div class="principle">
-      <strong>3 câu chốt:</strong><br>
-      1) Cụ thể nhưng không biến QD thành reviewer → tách Lớp A / Lớp B.<br>
-      2) QD mặc định chỉ cầm Lớp A; Lớp B là Reviewer (QD cầm thêm khi kiêm hoặc spot-check).<br>
-      3) Đạt chuẩn = Lớp A ĐỦ + 指摘 Lớp B trong ngưỡng → rồi mới xếp A–D.
+      <strong>3 câu cho QD:</strong><br>
+      1) Chỉ check có link / đúng người approve / 指摘 trong ngưỡng.<br>
+      2) CHƯA ĐỦ → trả 担当; không review nội dung thay Reviewer.<br>
+      3) ĐỦ → cho giai đoạn đi tiếp.
     </div>
-    <footer>Chi tiết: QD_Framework_Output_Chuan_Theo_Giai_Doan.md</footer>
+    <footer>QD_Framework_Output_Chuan_Theo_Giai_Doan.md</footer>
   </div>
 </body>
 </html>

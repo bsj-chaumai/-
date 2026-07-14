@@ -1,43 +1,35 @@
 <map version="1.0.1">
-<node TEXT="Bộ output 2 lớp&#xa;QD / Reviewer" FOLDED="false" STYLE="bubble" COLOR="#0f6b5c">
+<node TEXT="Output đánh giá cho QD&#xa;(tách khỏi Reviewer)" FOLDED="false" STYLE="bubble" COLOR="#0f6b5c">
   <font NAME="SansSerif" SIZE="15" BOLD="true"/>
 
-  <node TEXT="Vì sao 2 lớp" POSITION="left">
-    <font BOLD="true"/>
-    <node TEXT="Muốn cụ thể → dễ biến QD thành reviewer"/>
-    <node TEXT="Tách A cổng / B nội dung"/>
-  </node>
-
-  <node TEXT="Lớp A — QD" POSITION="left" COLOR="#0b4f8a">
+  <node TEXT="QD chỉ hỏi" POSITION="left" COLOR="#1c2430">
     <font BOLD="true"/>
     <node TEXT="Có link artifact?"/>
-    <node TEXT="Ai đã approve?"/>
-    <node TEXT="Số 指摘 / % / version"/>
-    <node TEXT="ĐỦ / CHƯA ĐỦ"/>
-  </node>
-
-  <node TEXT="Lớp B — Reviewer" POSITION="left" COLOR="#6b3fa0">
-    <font BOLD="true"/>
-    <node TEXT="Nội dung đúng/đủ?"/>
-    <node TEXT="Ghi 指摘 chi tiết"/>
-    <node TEXT="Approve chuyên môn"/>
+    <node TEXT="Đúng người approve?"/>
+    <node TEXT="Critical/High = 0?"/>
+    <node TEXT="→ ĐỦ / CHƯA ĐỦ"/>
   </node>
 
   <node TEXT="6 giai đoạn" POSITION="right" COLOR="#0f6b5c">
     <font BOLD="true"/>
-    <node TEXT="要件・計画"/>
-    <node TEXT="設計 SPEC"/>
-    <node TEXT="デザイン"/>
-    <node TEXT="開発"/>
-    <node TEXT="検証"/>
-    <node TEXT="リリース"/>
-  </node>
-
-  <node TEXT="QD kiêm reviewer?" POSITION="right">
-    <font BOLD="true"/>
-    <node TEXT="Không → chỉ Lớp A"/>
-    <node TEXT="Có → A + B"/>
-    <node TEXT="Rủi ro cao → A + spot-check B"/>
+    <node TEXT="要件・計画 → Dir/PM">
+      <node TEXT="要件 + 計画 + WBS + approve + High=0"/>
+    </node>
+    <node TEXT="設計 SPEC → BrSE/Dir">
+      <node TEXT="SPEC + AC + nhánh + review Dev&QC + version + High=0"/>
+    </node>
+    <node TEXT="デザイン → Designer">
+      <node TEXT="Figma Final + Error/Empty + handoff + approve + High=0"/>
+    </node>
+    <node TEXT="開発 → Dev">
+      <node TEXT="PR + approve + 影響範囲 + build + High=0"/>
+    </node>
+    <node TEXT="検証 → QC/Dev">
+      <node TEXT="Kế hoạch + case + kết quả + Go/No-Go + 100% + High=0"/>
+    </node>
+    <node TEXT="リリース → Dir">
+      <node TEXT="Go + 手順 + Rollback + smoke + báo cáo + High=0"/>
+    </node>
   </node>
 </node>
 </map>
