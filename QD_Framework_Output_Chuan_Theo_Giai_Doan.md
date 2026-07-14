@@ -1,327 +1,377 @@
 # QD Framework — Output đánh giá chuẩn theo giai đoạn
 
-## 1. Bức tranh tổng quát
+## 1. QD đánh giá thế nào nếu không phải người review chính?
 
-Mỗi giai đoạn dự án đều đi qua **2 vòng đánh giá**:
+**Chốt trước:** QD **không bắt buộc** là người review nội dung.  
+Review nội dung do **担当 giai đoạn** (hoặc người được chỉ định) làm.  
+QD dùng **bảng quy chuẩn** để kiểm tra giai đoạn **đủ chuẩn hay chưa** và yêu cầu đối ứng / cải thiện.
+
+| Vai trò | Ai | Làm gì |
+|---|---|---|
+| **Người làm / review nội dung** | 担当 giai đoạn (Dir, BrSE, Designer, Dev, QC…) | Tạo output, review chuyên môn, sửa 指摘 |
+| **Người đánh giá theo chuẩn (QD)** | QD (có thể kiêm review, hoặc chỉ audit) | So với bảng quy chuẩn bằng **bằng chứng**; kết luận ĐỦ/CHƯA ĐỦ; xếp mức A–D; yêu cầu đối ứng |
+
+```
+担当 tạo output + (review nội dung nếu có)
+        │
+        ▼
+QD đối chiếu BẢNG QUY CHUẨN (không cần là reviewer chính)
+        │
+        ├─ Vòng 1: Đủ chuẩn vận hành chưa?  → ĐỦ / CHƯA ĐỦ
+        │         CHƯA ĐỦ → trả 担当 đối ứng
+        │
+        └─ Vòng 2: (chỉ khi ĐỦ) xếp mức A/B/C/D theo bằng chứng
+```
+
+### QD kiểm bằng gì? (không cần đọc hết như reviewer)
+
+QD chỉ cần trả lời bằng **bằng chứng nhìn thấy được**:
+
+| Câu hỏi của QD | Cách kiểm (không cần review sâu) |
+|---|---|
+| Output bắt buộc có chưa? | Có **link** file/ticket/Figma/PR/Sheet không? |
+| Đúng người đã xác nhận chưa? | Có approve / ký tên / comment của 担当 hoặc reviewer chỉ định không? |
+| 指摘 còn vượt ngưỡng không? | Đếm Critical/High còn mở trên Backlog / PR |
+| Sang bước sau có an toàn không? | Vòng 1 = ĐỦ thì cho đi tiếp; CHƯA ĐỦ thì dừng và trả 担当 |
+
+**Review sâu nội dung** (đúng logic nghiệp vụ, đẹp design, bug tinh…) = việc của 担当 / reviewer được chỉ định.  
+QD chỉ **bắt buộc làm** khi:
+- Team giao QD review giai đoạn đó, **hoặc**
+- Vòng 2 cần **kiểm mẫu** (spot-check) khi bằng chứng yếu / rủi ro cao.
+
+---
+
+## 2. Bức tranh tổng quát (2 vòng)
 
 ```
 Giai đoạn (要件 → 設計 → デザイン → 開発 → 検証 → リリース)
         │
         ▼
- ┌─────────────────────────────┐
- │ VÒNG 1: Đủ điều kiện chưa?  │  ← check mục bắt buộc + số 指摘
- └─────────────┬───────────────┘
-               │
-      ┌────────┴────────┐
-      ▼                 ▼
-   CHƯA ĐỦ            ĐỦ
-      │                 │
-      ▼                 ▼
- Liên hệ 担当      VÒNG 2: Chấm điểm sâu
- đối ứng lại       (xếp mức theo QD Framework)
- rồi đánh giá        │
- Vòng 1 lại          ▼
-                 Ghi kết quả → sang giai đoạn sau
+ ┌──────────────────────────────────────┐
+ │ VÒNG 1: Đủ chuẩn chưa? (QD audit)    │
+ │ = đủ mục bắt buộc + 指摘 trong ngưỡng │
+ └───────────────┬──────────────────────┘
+                 │
+        ┌────────┴────────┐
+        ▼                 ▼
+     CHƯA ĐỦ            ĐỦ
+        │                 │
+        ▼                 ▼
+  Liên hệ 担当      VÒNG 2: Xếp mức A/B/C/D
+  đối ứng / cải thiện   (theo bằng chứng + trục)
+  → làm lại Vòng 1      │
+                        ▼
+                  Ghi kết quả → cho sang giai đoạn sau
 ```
 
-| Vòng | Câu hỏi chính | Kết quả |
-|---|---|---|
-| **Vòng 1** | Đã đủ điều kiện để review chưa? | **ĐỦ** / **CHƯA ĐỦ** |
-| **Vòng 2** | Nội dung đạt mức nào? | **A / B / C / D** *(cách tính điểm: 未確定 — chỉ định nghĩa trục đánh giá)* |
+| Vòng | Ai chính | Câu hỏi | Kết quả |
+|---|---|---|---|
+| **Vòng 1** | **QD** (theo bảng quy chuẩn) | Đủ chuẩn để đi tiếp chưa? | **ĐỦ** / **CHƯA ĐỦ** |
+| **Vòng 2** | **QD** xếp mức; 担当 cung cấp bằng chứng | Đạt mức nào? | **A / B / C / D** *(công thức điểm: 未確定)* |
 
-**Lưu ý:** Vòng 2 chỉ làm khi Vòng 1 = **ĐỦ**.  
-Thiếu mục bắt buộc hoặc 指摘 vượt ngưỡng → **không chấm điểm**, trả về 担当 xử lý.
+Vòng 2 chỉ làm khi Vòng 1 = **ĐỦ**.  
+Thiếu mục bắt buộc hoặc 指摘 vượt ngưỡng → **không chấm điểm**, trả 担当.
 
 ---
 
-## 2. Quy tắc dùng chung (đơn giản)
+## 3. Quy tắc dùng chung
 
 | Từ | Nghĩa |
 |---|---|
+| Bảng quy chuẩn | Checklist mục bắt buộc + ngưỡng 指摘 + trục chấm từng giai đoạn (tài liệu này) |
 | Output | File / ticket / link / số liệu cụ thể |
-| 担当 | Người chịu trách nhiệm giai đoạn đó |
-| 指摘 | Lỗi / thiếu sót phát hiện khi review |
-| ĐỦ (Vòng 1) | Có đủ mục bắt buộc **và** 指摘 trong ngưỡng |
-| CHƯA ĐỦ | Thiếu mục bắt buộc **hoặc** 指摘 vượt ngưỡng → liên hệ 担当 đối ứng |
-| A/B/C/D | Mức chất lượng theo QD Framework (A cao nhất) |
+| 担当 | Người chịu trách nhiệm tạo / sửa output giai đoạn |
+| Reviewer nội dung | Người review chuyên môn (có thể là 担当, peer, hoặc QD nếu được giao) |
+| QD | Người đối chiếu bảng quy chuẩn, kết luận ĐỦ/CHƯA ĐỦ, xếp mức, yêu cầu đối ứng |
+| 指摘 | Lỗi / thiếu sót còn mở (từ review nội dung hoặc từ QD khi spot-check) |
+| ĐỦ | Có đủ mục bắt buộc **và** Critical/High = 0 |
+| CHƯA ĐỦ | Thiếu mục **hoặc** vượt ngưỡng → 担当 phải đối ứng |
 
-**Không dùng khi đánh giá:** “ổn”, “cơ bản xong”, “tạm được”, “sẽ confirm sau” (không có owner + deadline).
+**Không dùng:** “ổn”, “cơ bản xong”, “tạm được” — chỉ chấp nhận link / số / tên người xác nhận.
 
 ---
 
-## 3. Vòng 1 — Đánh giá tổng quan (đủ điều kiện chưa?)
+## 4. Vòng 1 — QD kiểm đủ chuẩn (không cần là reviewer chính)
 
-### Cách làm (mọi giai đoạn)
+### Cách QD làm (mọi giai đoạn)
 
-1. Mở checklist mục bắt buộc của giai đoạn  
-2. Tick từng mục: **có link cụ thể** = OK; thiếu = NG  
-3. Đếm 指摘 còn mở theo mức  
-4. Kết luận:
-   - **ĐỦ** → sang Vòng 2  
-   - **CHƯA ĐỦ** → ghi rõ mục thiếu / số 指摘 vượt → **liên hệ 担当 đối ứng** → làm lại Vòng 1
+1. Mở bảng mục bắt buộc của giai đoạn  
+2. Với mỗi mục: **có link + đúng loại artifact** = OK; thiếu = NG  
+3. Xác nhận đã có **chữ ký / approve của đúng vai trò** (VD: Dev+QC đã review SPEC) — QD không bắt buộc tự review lại toàn bộ  
+4. Đếm 指摘 Critical/High còn mở  
+5. Kết luận:
+   - **ĐỦ** → cho phép Vòng 2 / sang bước sau theo quy trình  
+   - **CHƯA ĐỦ** → ghi mục thiếu + số 指摘 → **liên hệ 担当**, đặt hạn đối ứng → kiểm lại Vòng 1
 
-### Ngưỡng 指摘 mặc định (Vòng 1)
+### Ngưỡng 指摘 (Vòng 1)
 
-| Mức 指摘 | Ngưỡng cho phép còn mở |
+| Mức | Còn mở tối đa |
 |---|---|
 | Critical / Blocker | **0** |
 | High | **0** |
-| Medium / Low | Cho phép tạm, nhưng phải có owner + hạn xử lý |
+| Medium / Low | Cho phép tạm nếu có **owner + hạn xử lý** |
 
-> Dự án có thể đổi ngưỡng Medium/Low, nhưng phải **ghi trước** khi bắt đầu đánh giá giai đoạn đó.
+### QD không làm gì ở Vòng 1?
+
+- Không viết lại SPEC/Design/Code thay 担当  
+- Không bắt buộc đọc từng dòng như reviewer chính  
+- Chỉ **chặn / mở cổng** theo bảng quy chuẩn + bằng chứng
 
 ---
 
-## 4. Vòng 2 — Chấm điểm sâu (chỉ khi Vòng 1 = ĐỦ)
+## 5. Vòng 2 — Xếp mức A–D khi đã ĐỦ
 
 ### Mục đích
-Xếp nội dung vào mức **A / B / C / D** theo QD Framework.
+Xếp giai đoạn vào **A / B / C / D** để cải thiện và theo dõi xu hướng.
 
-### Trạng thái tính điểm
-**Cách tính điểm chi tiết (công thức / trọng số) hiện 未確定.**  
-Tài liệu này chỉ chốt:
-- **Chấm cái gì** (trục đánh giá)
-- **Lấy bằng chứng ở đâu** (output)
-- **Mức A–D nghĩa là gì** (định nghĩa định tính tạm thời để vận hành)
+### Ai làm gì?
 
-### Định nghĩa mức (dùng tạm đến khi có công thức chính thức)
-
-| Mức | Ý nghĩa vận hành |
+| Người | Việc |
 |---|---|
-| **A** | Đủ, rõ, ít phải hỏi lại; gần như không có lỗ hổng chính |
-| **B** | Dùng được; còn vài điểm nhỏ cần cải thiện |
-| **C** | Dùng được có điều kiện; còn thiếu / mơ hồ ở chỗ quan trọng |
-| **D** | Yếu; dễ gây hiểu nhầm, handoff khó, rủi ro cao |
+| 担当 | Chuẩn bị bằng chứng theo từng **trục chấm** |
+| QD | Xếp mức dựa trên bằng chứng; có thể **kiểm mẫu** 1–2 điểm rủi ro |
+| Reviewer nội dung | Nếu đã review, QD dùng kết quả review (số 指摘, comment) làm input — không cần QD review lại toàn bộ |
 
-### Cách ghi kết quả Vòng 2
+### Công thức điểm
+**未確定.** Hiện chỉ chốt: chấm theo trục nào, bằng chứng gì, mức A–D nghĩa là gì.
 
-```
-Giai đoạn: ____
-Vòng 1: ĐỦ
-Mức (A/B/C/D): ____
-Lý do ngắn (1–3 gạch đầu dòng, bám trục đánh giá):
-- ...
-Người đánh giá / ngày: ____
-```
+| Mức | Ý nghĩa |
+|---|---|
+| **A** | Đủ, rõ, ít phải hỏi lại |
+| **B** | Dùng được; còn điểm nhỏ |
+| **C** | Dùng được có điều kiện; còn thiếu chỗ quan trọng |
+| **D** | Yếu; handoff khó, rủi ro cao |
+
+### Khi nào QD nên spot-check (xem mẫu)?
+
+- Bằng chứng mâu thuẫn (có approve nhưng vẫn nhiều hỏi lại trên Slack)  
+- Giai đoạn rủi ro cao (リリース, 検証 trước release)  
+- Điểm giai đoạn trước = C/D  
+- 担当 tự chấm cao nhưng output trống / link gãy  
+
+Spot-check = xem **vài điểm quan trọng**, không thay cả vòng review nội dung.
 
 ---
 
-## 5. Output chuẩn từng giai đoạn
+## 6. Output chuẩn từng giai đoạn
+
+Mỗi giai đoạn dưới đây:
+- **担当** = người tạo / đối ứng  
+- **Vòng 1** = việc QD check theo chuẩn  
+- **Vòng 2** = trục QD dùng để xếp mức (khi đã ĐỦ)
 
 ---
 
-### 5.1 要件定義・PJ計画書
+### 6.1 要件定義・PJ計画書
 
 **担当:** Dir / PM  
-**Mục tiêu giai đoạn:** Chốt làm gì, không làm gì, khi nào xong, ai làm.
+**Mục tiêu:** Chốt làm gì / không làm gì / khi nào xong.
 
-#### Vòng 1 — Mục bắt buộc
+#### Vòng 1 — QD check mục bắt buộc
 
-| # | Mục bắt buộc | OK khi |
+| # | Mục bắt buộc | QD coi OK khi thấy |
 |---|---|---|
-| 1 | 要件定義書 | Có In / Out scope, mục tiêu, ai dùng (actor) |
-| 2 | PJ計画書 | Có milestone + ngày + người phụ trách |
-| 3 | Ticket / WBS | Đã tách việc, có estimate sơ bộ |
-| 4 | Approve của khách | Có ngày + tên người + link |
+| 1 | 要件定義書 | Link có In/Out, mục tiêu, actor |
+| 2 | PJ計画書 | Link có milestone + ngày + owner |
+| 3 | Ticket / WBS | Backlog đã tách việc + estimate sơ bộ |
+| 4 | Approve khách | Comment/note có ngày + tên người |
 
-**Vòng 1 = ĐỦ khi:** đủ 4 mục trên + Critical/High 指摘 = 0.  
-**CHƯA ĐỦ →** liên hệ Dir/PM bổ sung / sửa.
+**ĐỦ** = đủ 4 mục + Critical/High = 0.  
+**CHƯA ĐỦ** → QD liên hệ **Dir/PM** đối ứng.
 
-#### Vòng 2 — Trục chấm điểm *(công thức 未確定)*
+#### Vòng 2 — Trục xếp mức *(công thức 未確定)*
 
-| Trục | Hỏi gì | Bằng chứng |
+| Trục | QD hỏi (nhìn bằng chứng) | Bằng chứng |
 |---|---|---|
-| Rõ phạm vi | In/Out có tách rõ không? | 要件定義書 |
-| Khả thi kế hoạch | Milestone có ngày thật, có owner không? | PJ計画書 |
-| Sẵn sàng triển khai | Ticket có đủ để bắt đầu 設計 không? | WBS / Backlog |
-| Đồng thuận | Khách đã chốt chưa? | Approve link |
+| Rõ phạm vi | In/Out có tách không? | 要件定義書 |
+| Kế hoạch thật | Milestone có ngày + owner không? | PJ計画書 |
+| Sẵn sàng | Ticket đủ để bắt đầu 設計 không? | WBS |
+| Đồng thuận | Khách đã chốt chưa? | Approve |
 
 ---
 
-### 5.2 設計（画面仕様書 SPEC / 設計書）
+### 6.2 設計（SPEC / 設計書）
 
 **担当:** BrSE / Dir  
-**Mục tiêu giai đoạn:** Viết đủ để Dev code và QC test, không phải hỏi lại ý định.
+**Reviewer nội dung gợi ý:** Dev + QC (QD chỉ bắt buộc nếu được giao)
 
-#### Vòng 1 — Mục bắt buộc
+#### Vòng 1 — QD check
 
-| # | Mục bắt buộc | OK khi |
+| # | Mục bắt buộc | QD coi OK khi thấy |
 |---|---|---|
-| 1 | 画面仕様書 (SPEC) | Có field, validation, lỗi, quyền, flow màn |
-| 2 | AC (tiêu chí nghiệm thu) | Mỗi chức năng chính có checklist / Given–When–Then |
-| 3 | Bảng trạng thái / nhánh | Các nhánh chính đã ghi |
-| 4 | Review Dev + QC | Đã review; Critical/High = 0 |
+| 1 | SPEC | Link SPEC có field/validation/lỗi/quyền/flow |
+| 2 | AC | Có checklist hoặc Given–When–Then |
+| 3 | Bảng nhánh | Có ghi nhánh chính |
+| 4 | Review Dev + QC | Có record approve/review; Critical/High = 0 |
 
-**Vòng 1 = ĐỦ khi:** đủ 4 mục + Critical/High 指摘 = 0.  
-**CHƯA ĐỦ →** liên hệ BrSE/Dir đối ứng.
+**CHƯA ĐỦ** → QD liên hệ **BrSE/Dir**.
 
-#### Vòng 2 — Trục chấm điểm *(công thức 未確定)*
+#### Vòng 2 — Trục xếp mức
 
-| Trục | Hỏi gì | Bằng chứng |
+| Trục | QD hỏi | Bằng chứng |
 |---|---|---|
-| Đủ để code | Dev có làm được mà không hỏi lại logic chính không? | SPEC |
-| Đủ để test | QC có viết case từ AC được không? | AC |
-| Bao phủ nhánh | Thiếu nhánh lỗi / quyền / trạng thái không? | Bảng nhánh |
-| Ổn định bản | Đã khóa version; đổi sau khóa có CR không? | Version / CR ticket |
+| Đủ để code | Còn TBD logic chính không? | SPEC |
+| Đủ để test | AC viết case được không? | AC |
+| Nhánh | Có bảng nhánh không? | Bảng nhánh |
+| Khóa bản | Có version khóa / CR sau khóa không? | Version / CR |
 
 ---
 
-### 5.3 デザイン
+### 6.3 デザイン
 
 **担当:** Designer  
-**Mục tiêu giai đoạn:** Figma đúng SPEC, đủ trạng thái để Dev làm.
+**Reviewer nội dung gợi ý:** Dir + Dev
 
-#### Vòng 1 — Mục bắt buộc
+#### Vòng 1 — QD check
 
-| # | Mục bắt buộc | OK khi |
+| # | Mục | QD coi OK khi thấy |
 |---|---|---|
-| 1 | Figma Final | Đủ màn trong scope, đánh dấu Final / Approved |
-| 2 | State cần thiết | Ít nhất: bình thường + Error + Empty |
-| 3 | Handoff | Frame gắn với SPEC; text/copy chính thức |
-| 4 | Approve Dir + Dev | Dir xác nhận đúng nghiệp vụ; Dev xác nhận làm được |
+| 1 | Figma Final | Link Final/Approved đủ màn scope |
+| 2 | State | Có Error + Empty (tối thiểu) |
+| 3 | Handoff | Frame gắn SPEC; copy chính thức |
+| 4 | Approve Dir + Dev | Có xác nhận của cả hai |
 
-**Vòng 1 = ĐỦ khi:** đủ 4 mục + Critical/High 指摘 = 0.  
-**CHƯA ĐỦ →** liên hệ Designer đối ứng.
+**CHƯA ĐỦ** → QD liên hệ **Designer**.
 
-#### Vòng 2 — Trục chấm điểm *(công thức 未確定)*
+#### Vòng 2 — Trục xếp mức
 
-| Trục | Hỏi gì | Bằng chứng |
+| Trục | QD hỏi | Bằng chứng |
 |---|---|---|
-| Khớp SPEC | Design có lệch logic / thiếu màn không? | Figma ↔ SPEC |
-| Đủ state | Thiếu Error / Empty / Disabled (nếu cần) không? | Figma states |
-| Sẵn sàng handoff | Dev còn phải hỏi spacing/copy/state không? | Handoff note |
-| Nhất quán | Component / text có thống nhất không? | Figma |
+| Khớp SPEC | Còn lệch / thiếu màn không? | Figma ↔ SPEC |
+| Đủ state | Thiếu Error/Empty không? | Figma |
+| Handoff | Dev còn hỏi thiếu gì không? | Note / Slack đã đóng |
+| Nhất quán | Component/text thống nhất chưa? | Figma |
 
 ---
 
-### 5.4 開発
+### 6.4 開発
 
-**担当:** Dev Lead / Dev chính  
-**Mục tiêu giai đoạn:** Code đúng SPEC/Design; bàn giao test được.
+**担当:** Dev  
+**Reviewer nội dung gợi ý:** Dev khác (PR review) — QD không thay code review
 
-#### Vòng 1 — Mục bắt buộc
+#### Vòng 1 — QD check
 
-| # | Mục bắt buộc | OK khi |
+| # | Mục | QD coi OK khi thấy |
 |---|---|---|
-| 1 | PR gắn ticket | Rõ PR đang làm ticket nào |
-| 2 | Code review approve | ≥ 1 người khác approve; Critical/High comment = 0 |
-| 3 | 影響範囲メモ | Ghi màn/API bị ảnh hưởng (hoặc “không có”) |
-| 4 | Build trên môi trường test | Có version/commit; QC biết test ở đâu |
+| 1 | PR gắn ticket | PR ghi rõ ticket |
+| 2 | Review approve | ≥ 1 approve; High comment = 0 |
+| 3 | 影響範囲メモ | Có ghi trong PR/ticket |
+| 4 | Build test | Có version/commit; chỗ test rõ |
 
-**Vòng 1 = ĐỦ khi:** đủ 4 mục + Critical/High 指摘 = 0.  
-**CHƯA ĐỦ →** liên hệ Dev đối ứng.  
-*(Ticket chỉ được coi Ready for QA khi Vòng 1 = ĐỦ.)*
+**ĐỦ** = Ready for QA. **CHƯA ĐỦ** → QD liên hệ **Dev**.
 
-#### Vòng 2 — Trục chấm điểm *(công thức 未確定)*
+#### Vòng 2 — Trục xếp mức
 
-| Trục | Hỏi gì | Bằng chứng |
+| Trục | QD hỏi | Bằng chứng |
 |---|---|---|
-| Đúng scope | Có code ngoài SPEC không có CR không? | PR + SPEC |
-| Chất lượng review | Review có bắt được vấn đề; còn nợ High không? | PR review |
-| Ảnh hưởng | Đã nêu vùng ảnh hưởng chưa? | 影響範囲メモ |
-| Sẵn sàng test | QC vào test được ngay không? | Build / env note |
+| Đúng scope | Có CR nếu lệch SPEC không? | PR + CR |
+| Review | Approve đủ; còn nợ High không? | GitHub |
+| Ảnh hưởng | Đã ghi 影響範囲 chưa? | PR body |
+| Sẵn sàng test | QC vào test được ngay không? | Env note |
 
 ---
 
-### 5.5 検証
+### 6.5 検証
 
 **担当:** QC  
-**Mục tiêu giai đoạn:** Có số liệu chứng minh đủ / chưa đủ để release hoặc UAT.
+**Reviewer nội dung:** chính là QC chạy test; QD audit số liệu & ngưỡng
 
-#### Vòng 1 — Mục bắt buộc
+#### Vòng 1 — QD check
 
-| # | Mục bắt buộc | OK khi |
+| # | Mục | QD coi OK khi thấy |
 |---|---|---|
 | 1 | テスト計画 | Có phạm vi, lịch, môi trường, tiêu chí Pass |
-| 2 | テスト仕様書 | Case map theo AC + regression ảnh hưởng |
-| 3 | Kết quả chạy test | Có % đã chạy, Pass/Fail, gắn version |
-| 4 | Bug tickets | Có severity, bước tái hiện, expected/actual |
-| 5 | 品質サマリー | Có số bug theo mức + kết luận Go / No-Go |
+| 2 | テスト仕様書 | Case map AC |
+| 3 | Kết quả test | % chạy + Pass/Fail + version |
+| 4 | Bug tickets | Có severity + tái hiện |
+| 5 | 品質サマリー | Có Go/No-Go + số bug theo mức |
 
-**Vòng 1 = ĐỦ khi:** đủ 5 mục + Critical/High còn mở = 0  
-*(High muốn để lại: phải có waiver viết rõ + Dir/khách duyệt).*  
-**CHƯA ĐỦ →** liên hệ QC (hoặc Dev nếu bug do code) đối ứng.
+**ĐỦ** = đủ 5 mục + Critical/High = 0 (High để lại phải có waiver).  
+**CHƯA ĐỦ** → QD liên hệ **QC** (hoặc Dev nếu bug code).
 
-#### Vòng 2 — Trục chấm điểm *(công thức 未確定)*
+#### Vòng 2 — Trục xếp mức
 
-| Trục | Hỏi gì | Bằng chứng |
+| Trục | QD hỏi | Bằng chứng |
 |---|---|---|
-| Bao phủ | Case có cover AC + vùng ảnh hưởng không? | テスト仕様書 |
-| Thực thi | Đã chạy đủ case In-scope chưa? | Kết quả test |
-| Bug đang mở | Còn rủi ro chính không? | Bug list |
-| Kết luận | Go / No-Go có dựa trên số liệu không? | 品質サマリー |
+| Bao phủ | Case cover AC + ảnh hưởng chưa? | 仕様書 |
+| Thực thi | Chạy đủ case In-scope chưa? | Kết quả |
+| Bug mở | Còn rủi ro chính không? | Bug list |
+| Kết luận | Go/No-Go có số liệu không? | サマリー |
 
 ---
 
-### 5.6 リリース
+### 6.6 リリース
 
 **担当:** Dir / Release owner  
-**Mục tiêu giai đoạn:** Lên production an toàn; có rollback; có xác nhận sau release.
+**QD:** audit đủ giấy tờ + ngưỡng trước/sau deploy (không nhất thiết tự deploy)
 
-#### Vòng 1 — Mục bắt buộc
+#### Vòng 1 — QD check
 
-| # | Mục bắt buộc | OK khi |
+| # | Mục | QD coi OK khi thấy |
 |---|---|---|
 | 1 | Go / No-Go | Có người duyệt + thời điểm + version |
-| 2 | リリース手順書 | Có từng bước deploy + ai làm |
-| 3 | Rollback計画 | Có điều kiện và cách rollback |
-| 4 | Smoke test production | Case tối thiểu sau deploy = Pass |
-| 5 | Báo cáo hoàn tất | Có giờ xong + version thực tế + đã gửi stakeholder |
+| 2 | 手順書 | Có bước + người làm |
+| 3 | Rollback | Có điều kiện + cách làm |
+| 4 | Smoke prod | Kết quả Pass |
+| 5 | Báo cáo | Giờ xong + version + đã gửi |
 
-**Vòng 1 = ĐỦ khi:** đủ 5 mục + Critical/High sau release = 0 (hoặc đang xử lý có ETA đã thống nhất).  
-**CHƯA ĐỦ →** liên hệ Dir / Release owner đối ứng.  
-**Không deploy** nếu thiếu Go, 手順書, hoặc Rollback.
+**Thiếu Go / 手順 / Rollback → QD không cho deploy.**  
+**CHƯA ĐỦ** → liên hệ **Dir**.
 
-#### Vòng 2 — Trục chấm điểm *(công thức 未確定)*
+#### Vòng 2 — Trục xếp mức
 
-| Trục | Hỏi gì | Bằng chứng |
+| Trục | QD hỏi | Bằng chứng |
 |---|---|---|
-| Chuẩn bị | Go / 手順 / Rollback đủ và rõ chưa? | Tài liệu release |
-| Thực thi | Deploy đúng bước, đúng version chưa? | 手順結果 |
-| Xác nhận sau | Smoke Pass chưa? | Smoke result |
-| Đóng vòng | Đã báo cáo và theo dõi sau release chưa? | Báo cáo / monitoring |
+| Chuẩn bị | Đủ Go/手順/Rollback chưa? | Tài liệu |
+| Thực thi | Đúng version chưa? | 手順結果 |
+| Xác nhận | Smoke Pass chưa? | Smoke |
+| Đóng vòng | Đã báo cáo + theo dõi chưa? | Báo cáo |
 
 ---
 
-## 6. Phiếu đánh giá nhanh (copy vào ticket)
+## 7. Phiếu QD dùng hàng ngày (copy vào ticket)
 
 ```
-【Giai đoạn】 要件 / 設計 / デザイン / 開発 / 検証 / リリース
+【Giai đoạn】 ____
 【担当】 ____
+【QD đánh giá】 ____ (có / không kiêm review nội dung: ____)
 
-■ Vòng 1 — Đủ điều kiện?
-- Mục bắt buộc thiếu: (không / liệt kê)
-- 指摘 Critical/High còn mở: __
-→ Kết luận Vòng 1: ĐỦ / CHƯA ĐỦ
-→ Nếu CHƯA ĐỦ: đã liên hệ 担当 ____ lúc ____ ; hạn đối ứng ____
+■ Vòng 1 — QD đối chiếu bảng quy chuẩn
+- Link mục bắt buộc:
+  1. ...
+  2. ...
+- Approve đúng vai trò: Có / Không (thiếu: ____)
+- Critical/High còn mở: __
+→ Vòng 1: ĐỦ / CHƯA ĐỦ
+→ Nếu CHƯA ĐỦ: đã hỏi 担当 ____ | hạn đối ứng ____
 
-■ Vòng 2 — Chỉ khi Vòng 1 = ĐỦ
+■ Vòng 2 — chỉ khi ĐỦ
 - Mức: A / B / C / D
-- Lý do (bám trục đánh giá):
+- Bám trục (1–3 lý do có bằng chứng):
   1.
   2.
-- Người đánh giá / ngày: ____
+- Có spot-check không? Có / Không — phạm vi: ____
 
-■ Ghi chú công thức điểm: 未確定 (chỉ xếp mức theo định nghĩa tạm)
+■ Công thức điểm: 未確定
 ```
 
 ---
 
-## 7. Bảng tra nhanh 1 trang
+## 8. Bảng tra nhanh — QD làm gì / 担当 làm gì
 
-| Giai đoạn | 担当 | Vòng 1: cần có | Vòng 1 NG thì | Vòng 2: chấm gì |
-|---|---|---|---|---|
-| 要件・計画 | Dir/PM | 要件 + 計画 + ticket + approve | Trả Dir bổ sung | Phạm vi, kế hoạch, sẵn sàng, đồng thuận |
-| 設計 SPEC | BrSE/Dir | SPEC + AC + nhánh + review | Trả BrSE sửa | Đủ code, đủ test, nhánh, khóa bản |
-| デザイン | Designer | Figma Final + state + handoff + approve | Trả Designer sửa | Khớp SPEC, state, handoff, nhất quán |
-| 開発 | Dev | PR + review + 影響範囲 + build | Trả Dev sửa | Đúng scope, review, ảnh hưởng, sẵn sàng test |
-| 検証 | QC | Kế hoạch + case + kết quả + bug + Go/No-Go | Trả QC/Dev xử lý | Bao phủ, thực thi, bug, kết luận |
-| リリース | Dir | Go + 手順 + Rollback + smoke + báo cáo | Dừng / trả Dir | Chuẩn bị, thực thi, xác nhận, đóng vòng |
+| Giai đoạn | 担当 (làm & đối ứng) | QD Vòng 1 (check chuẩn) | QD Vòng 2 (xếp mức) |
+|---|---|---|---|
+| 要件・計画 | Dir/PM | 要件+計画+ticket+approve có link? | Phạm vi, kế hoạch, sẵn sàng, đồng thuận |
+| 設計 SPEC | BrSE/Dir | SPEC+AC+nhánh+record review Dev/QC? | Đủ code/test, nhánh, khóa bản |
+| デザイン | Designer | Figma Final+state+handoff+approve? | Khớp SPEC, state, handoff |
+| 開発 | Dev | PR+approve+影響範囲+build? | Scope, review, ảnh hưởng, sẵn sàng test |
+| 検証 | QC | Đủ bộ test + Go/No-Go + High=0? | Bao phủ, thực thi, bug, kết luận |
+| リリース | Dir | Go+手順+Rollback+smoke+báo cáo? | Chuẩn bị, thực thi, xác nhận, đóng vòng |
 
 ---
 
-## 8. Nguyên tắc 3 câu (nhớ nhanh)
+## 9. 3 câu nhớ nhanh cho QD
 
-1. **Vòng 1:** Đủ mục bắt buộc chưa? 指摘 có vượt chưa?  
-2. **Chưa đủ:** gọi 担当 đối ứng — **không chấm điểm**.  
-3. **Đủ rồi:** mới Vòng 2 — xếp **A/B/C/D** theo trục đã định *(công thức điểm 未確定)*.
+1. **Tôi không cần là reviewer chính** — tôi đối chiếu **bảng quy chuẩn + link + số 指摘**.  
+2. **Vòng 1 CHƯA ĐỦ** → gọi **担当** đối ứng; chưa ĐỦ thì không chấm điểm.  
+3. **Vòng 1 ĐỦ** → xếp **A/B/C/D** theo trục; chỉ spot-check khi bằng chứng yếu hoặc rủi ro cao.
