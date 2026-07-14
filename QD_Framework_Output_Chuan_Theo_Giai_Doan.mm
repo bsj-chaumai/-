@@ -1,30 +1,34 @@
 <map version="1.0.1">
-<node TEXT="QD xác nhận kết quả review" FOLDED="false" STYLE="bubble" COLOR="#0f6b5c">
+<node TEXT="Bộ output chuẩn QD&#xa;要件 / SPEC / デザイン" FOLDED="false" STYLE="bubble" COLOR="#0f6b5c">
   <font NAME="SansSerif" SIZE="15" BOLD="true"/>
-  <node TEXT="Phân vai" POSITION="left">
+  <node TEXT="2 trục" POSITION="left">
     <font BOLD="true"/>
-    <node TEXT="Reviewer → nội dung → 指摘数"/>
-    <node TEXT="QD → xác nhận kết quả review"/>
+    <node TEXT="Độ phủ cấu trúc (Có/Không)"/>
+    <node TEXT="Độ tin cậy review (quy mô↔指摘数)"/>
   </node>
-  <node TEXT="Ví dụ SPEC" POSITION="left" COLOR="#a33b2b">
+  <node TEXT="3 kết luận" POSITION="left">
     <font BOLD="true"/>
-    <node TEXT="100 màn / 1 指摘"/>
-    <node TEXT="→ review kém"/>
-    <node TEXT="→ yêu cầu verify SPEC"/>
+    <node TEXT="PASS"/>
+    <node TEXT="REWORK"/>
+    <node TEXT="VERIFY"/>
   </node>
-  <node TEXT="QD cần" POSITION="right" COLOR="#0f6b5c">
+  <node TEXT="要件・計画" POSITION="right" COLOR="#0f6b5c">
     <font BOLD="true"/>
-    <node TEXT="Quy mô"/>
-    <node TEXT="Record review"/>
-    <node TEXT="指摘数 + mức"/>
-    <node TEXT="High=0"/>
-    <node TEXT="Kết luận: đi tiếp / verify"/>
+    <node TEXT="In/Out · actor · luồng nghiệp vụ"/>
+    <node TEXT="計画+ngày · WBS · approve"/>
+    <node TEXT="Quy mô chức năng + 指摘数"/>
   </node>
-  <node TEXT="3 giai đoạn" POSITION="right">
+  <node TEXT="設計書・SPEC" POSITION="right" COLOR="#0f6b5c">
     <font BOLD="true"/>
-    <node TEXT="要件・計画"/>
-    <node TEXT="設計 SPEC"/>
-    <node TEXT="デザイン"/>
+    <node TEXT="画面一覧 · 画面遷移"/>
+    <node TEXT="Logic/nhánh · Error/message · AC"/>
+    <node TEXT="Số màn + 指摘数 (100/1→VERIFY)"/>
+  </node>
+  <node TEXT="デザイン" POSITION="right" COLOR="#0f6b5c">
+    <font BOLD="true"/>
+    <node TEXT="Final · Error · Empty"/>
+    <node TEXT="Map↔SPEC · handoff"/>
+    <node TEXT="Số frame + 指摘数"/>
   </node>
 </node>
 </map>
