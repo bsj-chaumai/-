@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>QD Framework — Bộ output chuẩn 要件・SPEC・デザイン</title>
+  <style>
+    :root {
+      --bg: #f6f3ee; --surface: #fff; --ink: #1c2430; --muted: #5a6573;
+      --line: #d9d2c5; --accent: #0f6b5c; --accent-soft: #e6f3f0;
+      --pass: #14532d; --pass-bg: #e8f6ec;
+      --rework: #7a5b14; --rework-bg: #fff6e0;
+      --verify: #7a2e22; --verify-bg: #fbebe8;
+      --font: "IBM Plex Sans", "Noto Sans JP", "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; color: var(--ink); font-family: var(--font); line-height: 1.55; font-size: 15px;
+      background: radial-gradient(ellipse 80% 50% at 0% 0%, #e7efe9 0%, transparent 55%),
+                  radial-gradient(ellipse 70% 40% at 100% 10%, #efe8dc 0%, transparent 50%), var(--bg);
+    }
+    .wrap { max-width: 920px; margin: 0 auto; padding: 28px 18px 56px; }
+    header { margin-bottom: 14px; padding-bottom: 12px; border-bottom: 2px solid var(--ink); }
+    .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+    h1 { margin: 8px 0; font-size: clamp(1.25rem, 3vw, 1.7rem); line-height: 1.25; }
+    .lead { margin: 0; color: var(--muted); max-width: 70ch; }
+    h2 { font-size: 1.15rem; margin: 22px 0 8px; }
+    h3 { margin: 0 0 8px; font-size: 1.05rem; }
+    .card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin: 10px 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 8px 0; }
+    th, td { border: 1px solid var(--line); padding: 7px 9px; text-align: left; vertical-align: top; }
+    th { background: #f3efe7; font-size: 12px; }
+    .tag { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); margin-bottom: 6px; }
+    .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+    .pass { background: var(--pass-bg); color: var(--pass); border: 1px solid #b9dfc4; border-radius: 8px; padding: 8px 10px; font-size: 13px; }
+    .rework { background: var(--rework-bg); color: var(--rework); border: 1px solid #ecd89a; border-radius: 8px; padding: 8px 10px; font-size: 13px; }
+    .verify { background: var(--verify-bg); color: var(--verify); border: 1px solid #e5c2ba; border-radius: 8px; padding: 8px 10px; font-size: 13px; }
+    .principle { margin-top: 16px; padding: 12px 14px; border-left: 4px solid var(--accent); background: var(--accent-soft); border-radius: 0 10px 10px 0; }
+    footer { margin-top: 16px; color: var(--muted); font-size: 12px; }
+    @media (max-width: 720px) { .grid3 { grid-template-columns: 1fr; } }
+    @media print { body { background: #fff; } .card { break-inside: avoid; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="eyebrow">QD Framework · Bộ output chuẩn</div>
+      <h1>Đánh giá chất lượng: 要件・計画 / 設計書・SPEC / デザイン</h1>
+      <p class="lead">QD check độ phủ cấu trúc (Có/Không) + độ tin cậy review (quy mô ↔ 指摘数) → PASS / REWORK / VERIFY.</p>
+    </header>
+
+    <section class="card">
+      <h2 style="margin-top:0">Cách đánh giá</h2>
+      <div class="grid3">
+        <div class="pass"><strong>PASS</strong><br>Đủ độ phủ + review đáng tin + High=0 → đi tiếp</div>
+        <div class="rework"><strong>REWORK</strong><br>Còn Critical/High mở → đóng 指摘 rồi check lại</div>
+        <div class="verify"><strong>VERIFY</strong><br>Thiếu hạng mục cấu trúc hoặc review quá mỏng (vd. 100 màn/1 指摘)</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="tag">1 · 担当: Dir/PM</div>
+      <h3>要件・計画</h3>
+      <p style="font-size:13px;color:var(--muted);margin:0 0 8px">Quy mô bắt buộc: số chức năng hoặc số mục In-scope</p>
+      <table>
+        <thead><tr><th>#</th><th>Hạng mục độ phủ</th><th>Đạt khi</th></tr></thead>
+        <tbody>
+          <tr><td>R1</td><td>要件定義書 (link)</td><td>Mở được</td></tr>
+          <tr><td>R2</td><td>In scope / Out scope</td><td>Tách rõ hai phần</td></tr>
+          <tr><td>R3</td><td>Mục tiêu + actor</td><td>Có mô tả</td></tr>
+          <tr><td>R4</td><td>Luồng nghiệp vụ chính / use case</td><td>Có mô tả/flow</td></tr>
+          <tr><td>R5</td><td>PJ計画書 (link)</td><td>Mở được</td></tr>
+          <tr><td>R6</td><td>Milestone + ngày</td><td>Mỗi mốc có ngày</td></tr>
+          <tr><td>R7</td><td>Ticket / WBS</td><td>Đã tách task trên Backlog</td></tr>
+          <tr><td>R8</td><td>Approve khách</td><td>Tên + ngày + link</td></tr>
+          <tr><td>R9–R12</td><td>Review xong + 指摘数 + High=0 + độ tin cậy</td><td>Đủ số liệu; không quá mỏng</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <div class="tag">2 · Spec QD · 担当: BrSE/Dir · Reviewer: Dev+QC</div>
+      <h3>設計書・SPEC</h3>
+      <p style="font-size:13px;color:var(--muted);margin:0 0 8px">Quy mô bắt buộc: số màn hình đã review (vd. 100 màn)</p>
+      <table>
+        <thead><tr><th>#</th><th>Hạng mục độ phủ</th><th>Đạt khi</th></tr></thead>
+        <tbody>
+          <tr><td>S1</td><td>SPEC / 設計書 (link)</td><td>Mở được</td></tr>
+          <tr><td>S2</td><td>画面一覧 + số màn</td><td>Có list khớp quy mô</td></tr>
+          <tr><td>S3</td><td>画面遷移 (luồng màn)</td><td>Có sơ đồ hoặc mục chuyển màn</td></tr>
+          <tr><td>S4</td><td>Thông tin màn cơ bản (field/thành phần)</td><td>Có section cấu trúc màn</td></tr>
+          <tr><td>S5</td><td>Logic / nhánh xử lý</td><td>Có bảng/mục điều kiện–role–trạng thái</td></tr>
+          <tr><td>S6</td><td>Error / validation / message</td><td>Có mục định nghĩa lỗi</td></tr>
+          <tr><td>S7</td><td>Empty / trạng thái đặc biệt</td><td>Có — hoặc N/A + lý do</td></tr>
+          <tr><td>S8</td><td>AC</td><td>Có theo màn/chức năng</td></tr>
+          <tr><td>S9</td><td>Version / ngày khóa</td><td>Có ghi</td></tr>
+          <tr><td>S10</td><td>Record Spec Review</td><td>Đúng Reviewer đã xác nhận</td></tr>
+          <tr><td>S11–S13</td><td>指摘数 + High=0 + độ tin cậy</td><td>100 màn / 1 指摘 → VERIFY</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <div class="tag">3 · 担当: Designer · Reviewer: Dir+Dev</div>
+      <h3>デザイン</h3>
+      <p style="font-size:13px;color:var(--muted);margin:0 0 8px">Quy mô bắt buộc: số màn hoặc frame Final</p>
+      <table>
+        <thead><tr><th>#</th><th>Hạng mục độ phủ</th><th>Đạt khi</th></tr></thead>
+        <tbody>
+          <tr><td>D1</td><td>Figma Final / Approved</td><td>Link + dấu Final/Approved</td></tr>
+          <tr><td>D2</td><td>Danh sách màn/frame</td><td>Có số quy mô</td></tr>
+          <tr><td>D3</td><td>Happy path đủ màn In-scope</td><td>Mỗi màn có frame chính</td></tr>
+          <tr><td>D4</td><td>State Error</td><td>Có — hoặc N/A + lý do</td></tr>
+          <tr><td>D5</td><td>State Empty</td><td>Có — hoặc N/A + lý do</td></tr>
+          <tr><td>D6</td><td>State khác (Loading/Disabled…)</td><td>Có — hoặc N/A + lý do</td></tr>
+          <tr><td>D7</td><td>Mapping frame ↔ SPEC</td><td>Có map</td></tr>
+          <tr><td>D8</td><td>Handoff cơ bản</td><td>Có note/copy hoặc link SPEC</td></tr>
+          <tr><td>D9–D10</td><td>Record review + bản sau review</td><td>Đúng Reviewer; đúng bản</td></tr>
+          <tr><td>D11–D13</td><td>指摘数 + High=0 + độ tin cậy</td><td>Không quá mỏng so với quy mô</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <h2 style="margin-top:0">Tra nhanh</h2>
+      <table>
+        <thead><tr><th>Giai đoạn</th><th>Độ phủ chính</th><th>VERIFY khi</th></tr></thead>
+        <tbody>
+          <tr><td>要件・計画</td><td>In/Out · luồng nghiệp vụ · 計画+ngày · WBS · approve</td><td>Thiếu cấu trúc hoặc review mỏng</td></tr>
+          <tr><td>設計書・SPEC</td><td>画面遷移 · logic/nhánh · error/message · AC</td><td>Thiếu độ phủ hoặc 100 màn/1 指摘</td></tr>
+          <tr><td>デザイン</td><td>Final · Error · Empty · map↔SPEC · handoff</td><td>Thiếu state/map hoặc review mỏng</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <div class="principle">
+      <strong>3 câu áp dụng:</strong><br>
+      1) Reviewer = đúng/sai nội dung → 指摘数.<br>
+      2) QD = độ phủ Có/Không + quy mô↔指摘数 → PASS / REWORK / VERIFY.<br>
+      3) Mọi kết luận phải có link + số — không dùng “ổn / tạm được”.
+    </div>
+    <footer>Chi tiết phiếu copy-paste: QD_Framework_Output_Chuan_Theo_Giai_Doan.md</footer>
+  </div>
+</body>
+</html>
