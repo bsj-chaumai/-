@@ -18,6 +18,61 @@ Thiếu output / còn bug High = **Fail** → làm tiếp, không nhảy giai đ
 | Fail | Thiếu output, hoặc còn Blocker/High chưa xử lý |
 | Ai ký | 1 người chịu trách nhiệm giai đoạn đó |
 
+### Mindmap (tóm tắt)
+
+```mermaid
+mindmap
+  root((QD Framework<br/>Output đánh giá))
+    Cách đánh giá
+      Ticket Gate cuối giai đoạn
+      Check đủ output có link
+      Pass sang bước sau
+      Fail làm nốt
+      3 câu hỏi
+        Output đâu
+        Ai ký Pass
+        Sang bước tiếp chưa
+    Flow
+      1 要件・計画
+        Dir/PM ký
+        要件定義書
+        PJ計画書
+        Ticket/WBS
+        Approve khách
+      2 設計 SPEC
+        BrSE/Dir ký
+        SPEC
+        AC
+        Bảng nhánh
+        Review Dev+QC
+      3 デザイン
+        Designer ký
+        Figma Final
+        Error/Empty
+        Handoff
+        Approve Dir+Dev
+      4 開発
+        Dev ký
+        PR gắn ticket
+        Review approve
+        影響範囲
+        Build test
+      5 検証
+        QC ký
+        テスト計画
+        テスト仕様書
+        Kết quả
+        Bug tickets
+        Go/No-Go
+      6 リリース
+        Dir ký
+        Go/No-Go
+        手順書
+        Rollback
+        Smoke
+        Báo cáo
+```
+
 ---
 
 ## 1. 要件定義・PJ計画書
