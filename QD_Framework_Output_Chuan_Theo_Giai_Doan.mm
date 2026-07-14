@@ -1,35 +1,39 @@
 <map version="1.0.1">
-<node TEXT="Output đánh giá cho QD&#xa;(tách khỏi Reviewer)" FOLDED="false" STYLE="bubble" COLOR="#0f6b5c">
+<node TEXT="QD Output đánh giá&#xa;要件・設計・デザイン" FOLDED="false" STYLE="bubble" COLOR="#0f6b5c">
   <font NAME="SansSerif" SIZE="15" BOLD="true"/>
-
-  <node TEXT="QD chỉ hỏi" POSITION="left" COLOR="#1c2430">
+  <node TEXT="Cách đánh giá" POSITION="left">
     <font BOLD="true"/>
-    <node TEXT="Có link artifact?"/>
-    <node TEXT="Đúng người approve?"/>
-    <node TEXT="Critical/High = 0?"/>
-    <node TEXT="→ ĐỦ / CHƯA ĐỦ"/>
+    <node TEXT="OK = có link + đúng điều kiện"/>
+    <node TEXT="ĐỦ = tất cả OK + High=0"/>
+    <node TEXT="CHƯA ĐỦ → trả 担当"/>
   </node>
-
-  <node TEXT="6 giai đoạn" POSITION="right" COLOR="#0f6b5c">
+  <node TEXT="要件・計画 → Dir/PM" POSITION="right" COLOR="#0f6b5c">
     <font BOLD="true"/>
-    <node TEXT="要件・計画 → Dir/PM">
-      <node TEXT="要件 + 計画 + WBS + approve + High=0"/>
-    </node>
-    <node TEXT="設計 SPEC → BrSE/Dir">
-      <node TEXT="SPEC + AC + nhánh + review Dev&QC + version + High=0"/>
-    </node>
-    <node TEXT="デザイン → Designer">
-      <node TEXT="Figma Final + Error/Empty + handoff + approve + High=0"/>
-    </node>
-    <node TEXT="開発 → Dev">
-      <node TEXT="PR + approve + 影響範囲 + build + High=0"/>
-    </node>
-    <node TEXT="検証 → QC/Dev">
-      <node TEXT="Kế hoạch + case + kết quả + Go/No-Go + 100% + High=0"/>
-    </node>
-    <node TEXT="リリース → Dir">
-      <node TEXT="Go + 手順 + Rollback + smoke + báo cáo + High=0"/>
-    </node>
+    <node TEXT="要件定義書 (In/Out)"/>
+    <node TEXT="PJ計画書 (milestone+ngày)"/>
+    <node TEXT="Ticket/WBS"/>
+    <node TEXT="Approve khách"/>
+    <node TEXT="High=0"/>
+  </node>
+  <node TEXT="設計 SPEC → BrSE/Dir" POSITION="right" COLOR="#0f6b5c">
+    <font BOLD="true"/>
+    <node TEXT="SPEC"/>
+    <node TEXT="AC"/>
+    <node TEXT="Bảng nhánh"/>
+    <node TEXT="Review Dev"/>
+    <node TEXT="Review QC"/>
+    <node TEXT="Version khóa"/>
+    <node TEXT="High=0"/>
+  </node>
+  <node TEXT="デザイン → Designer" POSITION="right" COLOR="#0f6b5c">
+    <font BOLD="true"/>
+    <node TEXT="Figma Final"/>
+    <node TEXT="Error"/>
+    <node TEXT="Empty"/>
+    <node TEXT="Map SPEC"/>
+    <node TEXT="Approve Dir"/>
+    <node TEXT="Approve Dev"/>
+    <node TEXT="High=0"/>
   </node>
 </node>
 </map>
