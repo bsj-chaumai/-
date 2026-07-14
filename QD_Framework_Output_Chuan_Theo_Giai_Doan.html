@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>QD Role — xác nhận kết quả review + câu hỏi PM</title>
+  <title>QD focus — độ tin cậy review + độ phủ cấu trúc</title>
   <style>
     :root {
       --bg: #f6f3ee; --surface: #fff; --ink: #1c2430; --muted: #5a6573;
       --line: #d9d2c5; --accent: #0f6b5c; --accent-soft: #e6f3f0;
-      --ok: #14532d; --ok-bg: #e8f6ec; --ng: #7a2e22; --ng-bg: #fbebe8;
-      --warn: #7a5b14; --warn-bg: #fff6e0;
+      --a: #0b4f8a; --a-bg: #e8f1f8; --b: #6b3fa0; --b-bg: #f3eaf8;
+      --ok-bg: #e8f6ec; --ng-bg: #fbebe8; --warn-bg: #fff6e0;
       --font: "IBM Plex Sans", "Noto Sans JP", "Segoe UI", sans-serif;
     }
     * { box-sizing: border-box; }
@@ -29,80 +29,80 @@
     table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 8px 0; }
     th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
     th { background: #f3efe7; font-size: 12px; }
-    .ex { background: var(--warn-bg); border: 1px solid #ecd89a; color: #5c450f; border-radius: 8px; padding: 10px 12px; font-size: 13px; }
-    .ask { background: #f3eaf8; border: 1px solid #d4c0e8; border-radius: 8px; padding: 10px 12px; font-size: 13px; color: #4a2d6b; }
-    .ok { background: var(--ok-bg); color: var(--ok); border-radius: 8px; padding: 8px 10px; font-size: 13px; border: 1px solid #b9dfc4; }
-    .ng { background: var(--ng-bg); color: var(--ng); border-radius: 8px; padding: 8px 10px; font-size: 13px; border: 1px solid #e5c2ba; }
-    .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .a { background: var(--a-bg); color: var(--a); border: 1px solid #b7cfe3; border-radius: 8px; padding: 10px 12px; font-size: 13px; }
+    .b { background: var(--b-bg); color: var(--b); border: 1px solid #d4c0e8; border-radius: 8px; padding: 10px 12px; font-size: 13px; }
+    .note { background: var(--warn-bg); border: 1px solid #ecd89a; border-radius: 8px; padding: 10px 12px; font-size: 13px; color: #5c450f; }
     .principle { margin-top: 16px; padding: 12px 14px; border-left: 4px solid var(--accent); background: var(--accent-soft); border-radius: 0 10px 10px 0; }
+    .tag { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); margin-bottom: 6px; }
     footer { margin-top: 16px; color: var(--muted); font-size: 12px; }
-    @media (max-width: 720px) { .grid3 { grid-template-columns: 1fr; } }
+    @media (max-width: 640px) { .grid2 { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
   <div class="wrap">
     <header>
-      <div class="eyebrow">Làm rõ role QD + câu hỏi xác nhận PM</div>
-      <h1>Spec QD xác nhận kết quả review — không thay Reviewer</h1>
-      <p class="lead">Từ ví dụ PM: 100 màn / 1 指摘 → review kém → yêu cầu verify SPEC.</p>
+      <div class="eyebrow">QD không soi “sai chỗ nào”</div>
+      <h1>Focus: độ tin cậy review + độ phủ cấu trúc</h1>
+      <p class="lead">Output QD base theo định nghĩa chung kiểu: có luồng màn, có logic/nhánh, có error message… (Có/Không) — không base đúng/sai chi tiết.</p>
     </header>
 
     <section class="card">
-      <h2 style="margin-top:0">Phân vai rõ</h2>
-      <table>
-        <thead><tr><th></th><th>Spec Reviewer</th><th>Spec QD</th></tr></thead>
-        <tbody>
-          <tr><td><strong>Input</strong></td><td>Nội dung SPEC</td><td>Quy mô + 指摘数 + record review</td></tr>
-          <tr><td><strong>Việc</strong></td><td>Soi nội dung, tìm lỗi</td><td>Kết quả review có đáng tin không?</td></tr>
-          <tr><td><strong>Output</strong></td><td>指摘 list + 指摘数</td><td>PASS / REWORK / VERIFY LẠI</td></tr>
-          <tr><td><strong>Không làm</strong></td><td>Ra quyết định Gate thay QD</td><td>Tự review 100 màn thay Reviewer</td></tr>
-        </tbody>
-      </table>
-      <div class="ex" style="margin-top:8px">
-        QD <strong>không kết luận</strong> “SPEC sai chỗ nào”.<br>
-        QD kết luận: <strong>“Bằng chứng review chưa đủ tin → verify lại trước khi sang bước sau.”</strong>
+      <h2 style="margin-top:0">QD focus gì?</h2>
+      <div class="grid2">
+        <div class="a"><strong>A. Độ tin cậy review</strong><br>Quy mô ↔ 指摘数 hợp lý?<br>vd. 100 màn / 1 指摘 → VERIFY</div>
+        <div class="b"><strong>B. Độ phủ cấu trúc</strong><br>Hạng mục bắt buộc đã có/cover?<br>vd. có 画面遷移? có error message?</div>
+      </div>
+      <div class="note" style="margin-top:10px">
+        Reviewer = đúng/sai nội dung.<br>
+        QD = review đáng tin chưa + cover đủ hạng mục chưa → PASS / REWORK / VERIFY.
       </div>
     </section>
 
     <section class="card">
-      <h2 style="margin-top:0">3 quyết định của QD</h2>
-      <div class="grid3">
-        <div class="ok"><strong>PASS</strong><br>Review đáng tin + High=0 → đi tiếp</div>
-        <div class="ex" style="margin:0"><strong>REWORK</strong><br>Review có chiều sâu nhưng còn High/Critical mở</div>
-        <div class="ng"><strong>VERIFY</strong><br>Review quá mỏng (100 màn / 1 指摘) → review lại</div>
-      </div>
-    </section>
-
-    <section class="card">
-      <h2 style="margin-top:0">Output QD cần ghi</h2>
+      <h2 style="margin-top:0">Output base theo gì?</h2>
       <table>
-        <thead><tr><th>#</th><th>Output</th><th>Ví dụ</th></tr></thead>
+        <thead><tr><th>Loại tiêu chí</th><th>Ai</th><th>Ví dụ</th></tr></thead>
         <tbody>
-          <tr><td>1</td><td>Link artifact</td><td>Link SPEC</td></tr>
-          <tr><td>2</td><td>Quy mô đã review</td><td>100 màn</td></tr>
-          <tr><td>3</td><td>Reviewer + ngày + link</td><td>…</td></tr>
-          <tr><td>4</td><td>指摘数 + phân mức</td><td>1 (M1)</td></tr>
-          <tr><td>5</td><td>Đánh giá review</td><td>Kém — quá mỏng</td></tr>
-          <tr><td>6</td><td>Quyết định + 担当/hạn</td><td>VERIFY SPEC — BrSE — 7/18</td></tr>
+          <tr><td><strong>Độ phủ / có–không</strong></td><td>QD</td><td>Có 画面遷移? Có error? Có nhánh logic?</td></tr>
+          <tr><td><strong>Đúng–sai nội dung</strong></td><td>Reviewer</td><td>Logic màn A sai; message field B chưa đúng</td></tr>
         </tbody>
       </table>
     </section>
 
     <section class="card">
-      <h2 style="margin-top:0">Cần hỏi PM — ưu tiên 4 câu</h2>
-      <div class="ask">
-        <ol style="margin:0; padding-left:18px">
-          <li><strong>Ngưỡng nào</strong> = 指摘数 quá thấp so với quy mô? (công thức hoặc bảng theo số màn)</li>
-          <li><strong>Verify</strong> = review lại toàn bộ hay mẫu? Cùng reviewer hay người khác?</li>
-          <li>QD <strong>chỉ nhìn số</strong>, hay được spot-check nội dung tối đa bao nhiêu?</li>
-          <li>Sau verify, output nào để <strong>PASS</strong>? Ai được <strong>override</strong>?</li>
-        </ol>
-      </div>
-      <p style="font-size:13px; color: var(--muted); margin: 10px 0 0;">Chi tiết thêm nhóm A–F (ngưỡng, verify, đếm màn, ranh giới QD, 要件/Design, điểm QQS) xem file Markdown.</p>
+      <div class="tag">Thiết kế SPEC — hạng mục độ phủ cho QD</div>
+      <h3>Checklist Có / Không</h3>
+      <table>
+        <thead><tr><th>#</th><th>Hạng mục</th><th>QD check</th></tr></thead>
+        <tbody>
+          <tr><td>S1</td><td>画面一覧 / danh sách màn + số lượng</td><td>Có</td></tr>
+          <tr><td>S2</td><td>画面遷移 (luồng màn)</td><td>Có</td></tr>
+          <tr><td>S3</td><td>Logic / nhánh (điều kiện, role, trạng thái)</td><td>Có</td></tr>
+          <tr><td>S4</td><td>Error / validation / message</td><td>Có</td></tr>
+          <tr><td>S5</td><td>AC</td><td>Có</td></tr>
+          <tr><td>S6</td><td>Record review + 指摘数</td><td>Có</td></tr>
+          <tr><td>S7</td><td>Quy mô ↔ 指摘数 không quá mỏng</td><td>Đáng tin</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <h2 style="margin-top:0">要件・計画 & デザイン (cùng kiểu)</h2>
+      <table>
+        <thead><tr><th>Giai đoạn</th><th>Độ phủ QD nhìn</th></tr></thead>
+        <tbody>
+          <tr><td>要件・計画</td><td>In/Out · actor/mục tiêu · luồng nghiệp vụ · milestone+ngày · review+指摘数</td></tr>
+          <tr><td>デザイン</td><td>Figma Final · đủ màn · Error · Empty · map↔SPEC · review+指摘数</td></tr>
+        </tbody>
+      </table>
     </section>
 
     <div class="principle">
-      <strong>Tóm tắt role QD:</strong> Nhận kết quả từ Reviewer → đánh giá chất lượng review theo quy mô ↔ 指摘数 → PASS / REWORK / VERIFY. Không thay Reviewer soi nội dung.
+      <strong>3 câu:</strong><br>
+      1) QD không focus đúng/sai nội dung — focus độ tin cậy review + độ phủ cấu trúc.<br>
+      2) Output base định nghĩa chung (luồng màn, logic, error…) ở mức Có/Không.<br>
+      3) Đúng/sai chi tiết = Reviewer.
     </div>
     <footer>QD_Framework_Output_Chuan_Theo_Giai_Doan.md</footer>
   </div>

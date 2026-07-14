@@ -1,210 +1,164 @@
-# QD Framework — Role QD & Output đánh giá
+# QD Framework — QD focus gì? Output base theo gì?
 
-**Phạm vi hiện tại:** `要件・計画` → `設計 SPEC` → `デザイン`  
-*(Ưu tiên làm rõ qua ví dụ SPEC của PM.)*
+**Phạm vi:** `要件・計画` → `設計 SPEC` → `デザイン`
 
 ---
 
-## 1. Role QD — làm rõ từ ví dụ PM
+## 1. QD focus vào điều gì?
 
-### Ví dụ gốc
+### Câu chốt
 
-> **Spec Reviewer:** review nội dung SPEC → đưa ra **指摘数**  
-> **Spec QD:** xác nhận kết quả review SPEC.  
-> Ví dụ: SPEC **100 màn**, 指摘数 **= 1** → đánh giá **chất lượng review kém** → **yêu cầu verify SPEC** (vì chất lượng SPEC khả năng cũng có vấn đề).
-
-### Tách việc (không 曖昧)
-
-| | Spec Reviewer | Spec QD |
-|---|---|---|
-| **Input** | SPEC (nội dung) | Kết quả review: quy mô + 指摘数 (+ phân mức) + record review |
-| **Việc chính** | Soi nội dung, tìm lỗi/thiếu | Nhìn kết quả review có **đáng tin** không |
-| **Output** | Danh sách 指摘 + **指摘数** | Kết luận: **Chấp nhận review** / **Yêu cầu verify lại** |
-| **Không làm** | Kết luận “giai đoạn đạt chuẩn vận hành” thay QD | Không thay Reviewer đọc 100 màn để tìm 指摘 mới |
-
-### QD đang làm 2 việc (cần tách trong đầu)
-
-| Việc | Ý nghĩa trong ví dụ |
+| | Focus |
 |---|---|
-| **(1) Đánh giá chất lượng REVIEW** | 100 màn mà chỉ 1 指摘 → review **quá mỏng** → không tin kết quả review |
-| **(2) Ra quyết định vận hành** | Vì không tin review → **chặn đi tiếp**, yêu cầu **verify SPEC** (review lại / kiểm lại) |
+| **Reviewer** | **Nội dung đúng/sai** — SPEC sai chỗ nào, thiếu logic chỗ nào, message lỗi đúng chưa |
+| **QD** | **Độ tin cậy của review** + **độ phủ cấu trúc** — đã review đủ tầm chưa? các hạng mục bắt buộc đã được cover chưa? |
 
-> QD **không kết luận trực tiếp** “SPEC sai chỗ nào”.  
-> QD kết luận: **“Bằng chứng review chưa đủ tin → phải verify lại trước khi sang bước sau.”**
+QD **không** trả lời: *“Màn A thiếu validation field X.”*  
+QD **trả lời:** *“Kết quả review chưa đủ tin / độ phủ chưa đủ → chưa cho đi tiếp, phải verify.”*
+
+### 2 trục QD dùng để đánh giá
+
+| Trục | Câu hỏi của QD | Ví dụ |
+|---|---|---|
+| **A. Độ tin cậy review** | Quy mô ↔ 指摘数 có hợp lý không? | 100 màn / 1 指摘 → review mỏng → VERIFY |
+| **B. Độ phủ cấu trúc** | Các hạng mục bắt buộc đã có / đã được review chưa? | Có 画面遷移? Có error message? Có nhánh logic? |
 
 ```
-SPEC (100 màn)
-    │
-    ▼
-Spec Reviewer ──► 指摘数 = 1
-    │
-    ▼
-Spec QD nhìn: quy mô 100 ↔ 指摘 1
-    │
-    ├─ Review đáng tin? → KHÔNG
-    └─ Hành động: YÊU CẦU VERIFY SPEC
-         (không tự review thay Spec Reviewer)
+Reviewer: đúng / sai nội dung  →  指摘数
+                │
+                ▼
+QD:
+  (A) review có đáng tin không?     (quy mô ↔ 指摘数)
+  (B) đã cover đủ hạng mục chưa?   (checklist độ phủ)
+                │
+                ▼
+         PASS / REWORK / VERIFY
 ```
 
-### QD được phép kết luận gì?
+---
 
-| Được | Không được (trừ khi QD kiêm Reviewer) |
+## 2. Output QD base theo gì?
+
+**Base theo định nghĩa chung về độ phủ (coverage) — không base theo đúng/sai chi tiết.**
+
+Đúng như hướng bạn nghĩ:
+
+- Có **luồng màn hình** chưa?  
+- Có cover **logic / nhánh** chưa?  
+- Có định nghĩa **error message** chưa?  
+- … các hạng mục cấu trúc bắt buộc tương tự
+
+| Loại tiêu chí | Ai dùng | Ví dụ |
+|---|---|---|
+| **Độ phủ / có–không** | **QD** | Có mục 画面遷移? Có mục error? Reviewer đã tick cover logic? |
+| **Đúng–sai nội dung** | **Reviewer** | Logic màn A sai; message lỗi field B chưa đúng copy |
+
+### Quy tắc viết tiêu chí cho QD
+
+Chỉ đưa vào output QD nếu trả lời được bằng **Có / Không / Số** trong thời gian ngắn, **không cần** hiểu sâu nghiệp vụ từng màn.
+
+| Được (QD) | Không đưa cho QD (để Reviewer) |
 |---|---|
-| Review đã hoàn thành chưa? | SPEC field X thiếu validation |
-| 指摘数 có hợp lý so với quy mô không? | Design spacing sai 4px |
-| Critical/High còn mở không? | Tự viết lại danh sách 指摘 nội dung |
-| Cho đi tiếp hay bắt verify lại? | “Tôi đã review hộ nên không cần Reviewer” |
+| Có mục/luồng 画面遷移 trong SPEC? | Luồng màn A→B điều kiện đúng nghiệp vụ chưa? |
+| Có mục error message / validation? | Message field Email wording đúng chưa? |
+| Có bảng nhánh / trạng thái? | Nhánh role Admin xử lý đúng chưa? |
+| Reviewer đã confirm cover các mục trên? | Tự tìm thêm 指摘 nội dung |
+| 指摘数 so với số màn có bất thường? | — |
 
 ---
 
-## 2. Output QD cần có (để đánh giá được)
+## 3. Bộ hạng mục độ phủ đề xuất (để QD check)
 
-Mỗi lần QD đánh giá 1 giai đoạn, ticket/phiếu phải có:
+> Đây là **định nghĩa chung** — QD chỉ hỏi “có / đã cover chưa”, không chấm đúng sai.
 
-| # | Output | Ví dụ SPEC |
+### 3.1 設計 SPEC — hạng mục độ phủ (QD)
+
+| # | Hạng mục độ phủ | QD check (Có/Không) |
 |---|---|---|
-| 1 | Link artifact | Link SPEC |
-| 2 | **Quy mô đã review** | 100 màn hình |
-| 3 | Reviewer + ngày + link record | Nguyễn V. / 2026-07-10 / link |
-| 4 | **指摘数** tổng | 1 |
-| 5 | Phân mức (C/H/M/L) — mở / đã đóng | C0 H0 M1 L0 |
-| 6 | Đánh giá của QD về review | Kém — quá mỏng so với quy mô |
-| 7 | **Quyết định QD** | Yêu cầu verify SPEC |
-| 8 | 担当 + hạn (nếu verify / đối ứng) | BrSE — hạn 7/18 |
+| S1 | **画面一覧 / danh sách màn** trong scope | Có list màn + số lượng (quy mô) |
+| S2 | **画面遷移** (luồng màn hình) | Có sơ đồ hoặc mô tả chuyển màn |
+| S3 | **Logic / nhánh xử lý** (điều kiện, trạng thái, role…) | Có mục/bảng nhánh — không bị bỏ trống hạng mục |
+| S4 | **Error / validation / message** | Có định nghĩa trường hợp lỗi / message |
+| S5 | **AC (tiêu chí nghiệm thu)** | Có AC gắn màn/chức năng |
+| S6 | **Record review + 指摘数** | Reviewer đã xong; có số 指摘 theo mức |
+| S7 | **Tín hiệu độ tin cậy** | Quy mô ↔ 指摘数 không quá mỏng |
 
-### Quyết định QD (3 trạng thái — đề xuất)
+**QD PASS khi:** S1–S6 = Có, Critical/High mở = 0, và S7 không bị cờ “quá mỏng”.  
+**VERIFY khi:** thiếu hạng mục độ phủ **hoặc** 100 màn / 1 指摘 (review không đáng tin).
 
-| Trạng thái | Khi nào (theo tinh thần ví dụ PM) |
-|---|---|
-| **PASS** | Review xong; tín hiệu hợp lý so với quy mô; Critical/High mở = 0 |
-| **REWORK 指摘** | Review có vẻ đủ chiều sâu, nhưng còn Critical/High mở → 担当/Reviewer đóng 指摘 |
-| **VERIFY LẠI** | Tín hiệu review quá mỏng / không đáng tin (vd. 100 màn / 1 指摘) → bắt review lại artifact |
+### 3.2 要件・計画 — hạng mục độ phủ (QD)
+
+| # | Hạng mục độ phủ | QD check |
+|---|---|---|
+| R1 | In / Out scope | Có tách rõ |
+| R2 | Mục tiêu / actor (ai dùng, để làm gì) | Có |
+| R3 | Luồng nghiệp vụ chính (hoặc use case) | Có |
+| R4 | Milestone + ngày (計画) | Có |
+| R5 | Record review + 指摘数 | Có |
+| R6 | Quy mô ↔ 指摘数 | Không quá mỏng |
+
+### 3.3 デザイン — hạng mục độ phủ (QD)
+
+| # | Hạng mục độ phủ | QD check |
+|---|---|---|
+| D1 | Figma Final + danh sách màn/frame (quy mô) | Có |
+| D2 | Happy path đủ màn In-scope | Có |
+| D3 | State Error | Có hoặc N/A + lý do |
+| D4 | State Empty | Có hoặc N/A + lý do |
+| D5 | Mapping frame ↔ SPEC | Có |
+| D6 | Record review + 指摘数 | Có |
+| D7 | Quy mô ↔ 指摘数 | Không quá mỏng |
 
 ---
 
-## 3. Checklist QD ngắn — 3 giai đoạn
+## 4. Quan hệ với ví dụ PM (100 màn / 1 指摘)
 
-*(Giữ cùng logic: thu thập quy mô + 指摘数 → kết luận PASS / REWORK / VERIFY.)*
+Hai lý do QD bắt VERIFY — cùng lúc hoặc một trong hai:
 
-### 3.1 要件・計画
+| Lý do | Base | Ví dụ |
+|---|---|---|
+| Review mỏng | Trục A — độ tin cậy | 100 màn / 1 指摘 |
+| Thiếu độ phủ | Trục B — cấu trúc | SPEC không có 画面遷移 / không có error message |
 
-| Output QD | Ghi chú |
-|---|---|
-| Link 要件 + 計画 | |
-| Quy mô (số chức năng / mục In-scope) | |
-| Record review + 指摘数 + mức | |
-| Critical/High mở = 0 | |
-| Kết luận QD: PASS / REWORK / VERIFY | |
-
-### 3.2 設計 SPEC
-
-| Output QD | Ghi chú |
-|---|---|
-| Link SPEC (+ AC) | |
-| Quy mô = **số màn** (và/hoặc chức năng) | Bắt buộc — dùng để so với 指摘数 |
-| Record Spec Review + 指摘数 + mức | |
-| Critical/High mở = 0 | |
-| Kết luận QD: PASS / REWORK / VERIFY | vd. 100 màn / 1 指摘 → VERIFY |
-
-### 3.3 デザイン
-
-| Output QD | Ghi chú |
-|---|---|
-| Link Figma Final/Approved | |
-| Quy mô = số màn / frame đã review | |
-| Record Design Review + 指摘数 + mức | |
-| Critical/High mở = 0 | |
-| Kết luận QD: PASS / REWORK / VERIFY | Cùng logic “quá mỏng → VERIFY” |
+Cả hai đều **không** yêu cầu QD chỉ ra “màn số 37 sai logic”.
 
 ---
 
-## 4. Cần xác nhận lại với PM (các điểm còn 曖昧)
-
-Những chỗ ví dụ PM **chưa đủ để chốt quy tắc số** — nên hỏi PM trước khi khóa output/automation.
-
-### A. Ngưỡng “review kém” — quan trọng nhất
-
-| # | Câu hỏi cho PM | Vì sao cần |
-|---|---|---|
-| A1 | **Công thức / ngưỡng** thế nào để nói 指摘数 “quá thấp”? (vd. &lt; 1 指摘 / 10 màn? hay &lt; 5% số màn?) | Không có ngưỡng thì mỗi QD đánh giá khác nhau |
-| A2 | Có bảng theo **quy mô** không? (1–10 màn / 11–50 / 51–100+) | 5 màn / 1 指摘 khác 100 màn / 1 指摘 |
-| A3 | **0 指摘** với quy mô lớn: luôn VERIFY, hay cho PASS nếu Reviewer ghi “confirmed clean”? | Tránh bắt verify oan hoặc bỏ sót |
-| A4 | Chỉ nhìn **tổng 指摘数**, hay bắt buộc nhìn thêm **Critical/High**? | 1 Critical ≠ 1 Low |
-
-### B. “Verify SPEC” nghĩa là gì Exact?
-
-| # | Câu hỏi cho PM | Vì sao cần |
-|---|---|---|
-| B1 | Verify = **cùng Reviewer review lại**, hay **Reviewer khác** (second review)? | Ảnh hưởng người 担当 và lịch |
-| B2 | Verify lại **toàn bộ** 100 màn, hay **mẫu** (spot-check X%)? | Công sức và SLA |
-| B3 | Sau verify, QD nhận output gì để PASS? (指摘数 mới + record mới?) | Chốt “đóng vòng” |
-| B4 | Ai có quyền **override** (chấp nhận 100 màn / 1 指摘 nếu có lý do)? Dir? PM? | Tránh kẹt quy trình |
-
-### C. Phạm vi đếm “100 màn”
-
-| # | Câu hỏi cho PM | Vì sao cần |
-|---|---|---|
-| C1 | “Màn hình” đếm theo frame Figma, màn SPEC, hay ticket? | Quy mô phải cùng một đơn vị |
-| C2 | Màn chỉ đọc / popup / trạng thái có tính riêng không? | Tránh đội hoặc thiếu quy mô |
-| C3 | Review theo **đợt** (50/100 màn) thì QD đánh giá theo đợt hay cả phase? | Output Gate theo đợt hay cuối phase |
-
-### D. Ranh giới QD khi “khả năng SPEC cũng có vấn đề”
-
-| # | Câu hỏi cho PM | Vì sao cần |
-|---|---|---|
-| D1 | QD có được **mở SPEC đọc mẫu** để củng cố quyết định VERIFY không? (vd. spot-check 3–5 màn) | Nếu có → cần định nghĩa độ sâu tối đa của QD |
-| D2 | Hay QD **chỉ** dựa trên số liệu (quy mô/指摘数), tuyệt đối không mở nội dung? | Hai hướng ra output khác nhau |
-| D3 | Khi VERIFY: QD có tạo ticket/checklist bắt buộc cho Reviewer không, hay chỉ comment “verify lại”? | Output vận hành của QD |
-
-### E. Áp dụng cho 要件・計画 và デザイン
-
-| # | Câu hỏi cho PM | Vì sao cần |
-|---|---|---|
-| E1 | Cùng một rule “quy mô ↔ 指摘数” cho 要件 và Design? | Thống nhất Framework |
-| E2 | Đơn vị quy mô của 要件 là gì? (số yêu cầu / epic / use case?) | Tương đương “số màn” bên SPEC |
-| E3 | Design Reviewer bắt buộc là ai? (Dir+Dev / Design lead / QC?) | QD biết record nào hợp lệ |
-
-### F. Quan hệ với điểm A–D / QQS (nếu có)
-
-| # | Câu hỏi cho PM | Vì sao cần |
-|---|---|---|
-| F1 | Kết luận VERIFY/PASS của QD có **map sang điểm** giai đoạn không, hay tách riêng Gate? | Tránh lẫn Gate và Score |
-| F2 | 指摘数 thấp bất thường có tính là tín hiệu **trừ điểm Review** trong QQS không? | Liên kết dashboard |
-
----
-
-## 5. Gói câu hỏi ưu tiên gửi PM (ngắn)
-
-Nên hỏi trước **4 câu** này — đủ để chốt output QD vòng 1:
-
-1. **Ngưỡng nào** = “指摘数 quá thấp so với quy mô” (công thức hoặc bảng theo số màn)?  
-2. **Verify** = review lại toàn bộ hay mẫu? Cùng reviewer hay người khác?  
-3. QD **chỉ nhìn số**, hay được **spot-check nội dung** tối đa bao nhiêu?  
-4. Sau verify, output nào để QD cho **PASS**? Ai được **override**?
-
----
-
-## 6. Phiếu QD tạm dùng (trước khi PM chốt ngưỡng)
+## 5. Output ghi nhận của QD (mỗi lần đánh giá)
 
 ```
-【Spec QD】
-Quy mô đã review: ___ màn
-Reviewer: ___ | ngày: ___ | link: ___
-指摘数: ___ (C__/H__/M__/L__)
-Còn mở: C__/H__
-
-Đánh giá review:
-  ☐ Đáng tin so với quy mô
-  ☐ Quá mỏng so với quy mô (vd. kiểu 100 màn / 1 指摘)
-  ☐ Chưa đủ dữ liệu (thiếu quy mô hoặc 指摘数)
-
-Quyết định:
-  ☐ PASS — đi tiếp
-  ☐ REWORK — đóng Critical/High
-  ☐ VERIFY LẠI SPEC — 担当 ___ hạn ___
-
-Ghi chú (bắt buộc nếu VERIFY): vì sao không tin kết quả review
-___
+【Giai đoạn】 設計 SPEC
+【Quy mô】 100 màn
+【Độ phủ cấu trúc】
+  S1 画面一覧: Có/Không
+  S2 画面遷移: Có/Không
+  S3 Logic/nhánh: Có/Không
+  S4 Error/validation/message: Có/Không
+  S5 AC: Có/Không
+【Review】
+  Reviewer: ___ | 指摘数: ___ (C/H/M/L)
+  Độ tin cậy: Đáng tin / Quá mỏng
+【Quyết định】 PASS / REWORK / VERIFY
+【Lý do ngắn】 ...
 ```
 
-> Phần ngưỡng số: ghi **“theo rule PM — đang chờ chốt”** cho đến khi PM trả lời mục A/B ở trên.
+---
+
+## 6. Cần chốt với PM (để khóa danh sách độ phủ)
+
+Hướng bạn đề xuất (luồng màn, logic, error message…) **đúng lớp QD** nếu giữ ở mức Có/Không.
+
+Nên hỏi PM:
+
+1. Danh sách hạng mục độ phủ SPEC **bắt buộc** có phải là: 画面遷移 · logic/nhánh · error message · AC? Còn thiếu mục nào (quyền, API, empty state…)?  
+2. QD chỉ check **“có mục trong SPEC”**, hay bắt buộc Reviewer **tick đã review từng hạng mục**?  
+3. Thiếu 1 hạng mục độ phủ = luôn VERIFY, hay cho PASS có điều kiện?  
+4. Ngưỡng “quá mỏng” (100 màn / 1 指摘) chốt số thế nào?
+
+---
+
+## 7. 3 câu nhớ
+
+1. QD **không focus nội dung đúng/sai** — focus **độ tin cậy review** + **độ phủ cấu trúc**.  
+2. Output QD **base theo định nghĩa chung** (có luồng màn, có logic/nhánh, có error message…) ở mức **Có/Không**.  
+3. Đúng/sai chi tiết từng màn = **Reviewer** + 指摘数.
