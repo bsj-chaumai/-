@@ -1,43 +1,43 @@
 <map version="1.0.1">
-<node TEXT="QD đánh giá theo bảng quy chuẩn&#xa;(không bắt buộc là reviewer)" FOLDED="false" STYLE="bubble" COLOR="#0f6b5c">
+<node TEXT="Bộ output 2 lớp&#xa;QD / Reviewer" FOLDED="false" STYLE="bubble" COLOR="#0f6b5c">
   <font NAME="SansSerif" SIZE="15" BOLD="true"/>
 
-  <node TEXT="Tách vai trò" POSITION="left" COLOR="#1c2430">
+  <node TEXT="Vì sao 2 lớp" POSITION="left">
     <font BOLD="true"/>
-    <node TEXT="担当: làm + review nội dung + đối ứng"/>
-    <node TEXT="QD: đối chiếu bảng quy chuẩn"/>
-    <node TEXT="QD kiểm: link / approve / số 指摘"/>
-    <node TEXT="QD không bắt buộc review sâu"/>
+    <node TEXT="Muốn cụ thể → dễ biến QD thành reviewer"/>
+    <node TEXT="Tách A cổng / B nội dung"/>
   </node>
 
-  <node TEXT="2 vòng" POSITION="left" COLOR="#0f6b5c">
+  <node TEXT="Lớp A — QD" POSITION="left" COLOR="#0b4f8a">
     <font BOLD="true"/>
-    <node TEXT="Vòng 1: ĐỦ / CHƯA ĐỦ">
-      <node TEXT="CHƯA ĐỦ → trả 担当"/>
-      <node TEXT="Critical/High = 0"/>
-    </node>
-    <node TEXT="Vòng 2: A/B/C/D">
-      <node TEXT="Chỉ khi ĐỦ"/>
-      <node TEXT="Công thức điểm 未確定"/>
-      <node TEXT="Spot-check khi rủi ro cao"/>
-    </node>
+    <node TEXT="Có link artifact?"/>
+    <node TEXT="Ai đã approve?"/>
+    <node TEXT="Số 指摘 / % / version"/>
+    <node TEXT="ĐỦ / CHƯA ĐỦ"/>
+  </node>
+
+  <node TEXT="Lớp B — Reviewer" POSITION="left" COLOR="#6b3fa0">
+    <font BOLD="true"/>
+    <node TEXT="Nội dung đúng/đủ?"/>
+    <node TEXT="Ghi 指摘 chi tiết"/>
+    <node TEXT="Approve chuyên môn"/>
   </node>
 
   <node TEXT="6 giai đoạn" POSITION="right" COLOR="#0f6b5c">
     <font BOLD="true"/>
-    <node TEXT="要件・計画 → Dir/PM"/>
-    <node TEXT="設計 SPEC → BrSE/Dir"/>
-    <node TEXT="デザイン → Designer"/>
-    <node TEXT="開発 → Dev"/>
-    <node TEXT="検証 → QC"/>
-    <node TEXT="リリース → Dir"/>
+    <node TEXT="要件・計画"/>
+    <node TEXT="設計 SPEC"/>
+    <node TEXT="デザイン"/>
+    <node TEXT="開発"/>
+    <node TEXT="検証"/>
+    <node TEXT="リリース"/>
   </node>
 
-  <node TEXT="3 câu QD" POSITION="left">
+  <node TEXT="QD kiêm reviewer?" POSITION="right">
     <font BOLD="true"/>
-    <node TEXT="1. Check bảng quy chuẩn + bằng chứng"/>
-    <node TEXT="2. CHƯA ĐỦ → gọi 担当"/>
-    <node TEXT="3. ĐỦ → xếp A–D"/>
+    <node TEXT="Không → chỉ Lớp A"/>
+    <node TEXT="Có → A + B"/>
+    <node TEXT="Rủi ro cao → A + spot-check B"/>
   </node>
 </node>
 </map>
